@@ -8,6 +8,8 @@ Gene: {{ variant.gene.hgnc_name }}
 Evaluation: {{ variant_review.review_long }}
 </p>
 
+dbSNP: {{ dbsnps|join:", " }}
+
 <p>
 <a href="{% url 'variants:edit' variant.name %}">Edit variant</a>
 </p>

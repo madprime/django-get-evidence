@@ -15,11 +15,15 @@ variant_lookup(variant_string): returns Variant object for variant string
 Models
 ======
 
+DbSNP
+    rsid:         dbSNP ID (CharField)
+
 Variant
     gene:         Gene from genes.models (ForeignKey)
     aa_reference: amino acid(s) for reference it this position (CharField)
     aa_position:  position of amino acid variant (IntegerField)
     aa_variant:   variant amino acid(s) at this position (CharField)
+    dbsnps:       DbSNP (ManyToManyField)
 
     Note: amino acids are recorded according to single letter codes.
 
@@ -68,6 +72,26 @@ def variant_lookup(variant_string):
     return var_match
 
 
+class DbSNP(models.Model):
+    """Contains dbSNP information.
+
+    dbSNP IDs are a separate class with a many-to-many mapping because
+    (1) some variants have multiple dbSNP IDs mapped to the same
+    location, (2) dbSNP IDs refer to a position and some have more
+    than two alleles (e.g. triallelic)
+
+    Data attributes:
+    rsid: dbSNP identifier (CharField)
+
+    """
+
+    rsid = models.CharField(max_length = 16)
+
+    def __unicode__(self):
+        """Returns string with dbSNP identifier."""
+        return self.rsid
+
+
 class Variant(models.Model):
     """Tracks immutable variant data.
     
@@ -76,6 +100,7 @@ class Variant(models.Model):
     aa_reference: amino acid(s) for reference it this position
     aa_position:  position of amino acid variant
     aa_variant:   variant amino acid(s) at this position
+    dbsnps:       DbSNP (ManyToManyField)
     
     The combination of gene, aa_reference, aa_position, and aa_variant 
     is required to be unique.
@@ -94,6 +119,7 @@ class Variant(models.Model):
         max_length = 10,
         verbose_name='variant amino acid',
         )
+    dbsnps = models.ManyToManyField(DbSNP)
 
     class Meta:
         unique_together = (('gene', 'aa_reference', 

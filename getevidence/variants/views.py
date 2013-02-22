@@ -94,6 +94,7 @@ def detail(request, variant_pattern, template='variants/detail.html'):
         return render(request, template,
                       {'variant': variant,
                        'variant_review': variant.variantreview,
+                       'dbsnps': variant.dbsnps.all(),
                        })
     except AssertionError:
         return HttpResponse("Badly formatted variant? " + variant_pattern)
