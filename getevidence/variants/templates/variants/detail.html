@@ -1,0 +1,13 @@
+<p><h1>{{ variant.name }}</h1></p>
+
+<p>
+Gene: {{ variant.gene.hgnc_name }}
+</p>
+
+<p>
+Evaluation: {{ variant_review.review_long }}
+</p>
+
+<p>
+<a href="{% url 'variants:edit' variant.name %}">Edit variant</a>
+</p>

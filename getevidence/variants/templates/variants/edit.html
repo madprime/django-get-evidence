@@ -1,0 +1,9 @@
+<h1>{{ variant.name }}</h1>
+
+<form action="{% url 'variants:submit_edit' variant.name %}" method="post">
+{% csrf_token %}
+<textarea cols="80" rows="6" name="variant_review_long">
+{{ variant.variantreview.review_long }}</textarea>
+<input type="submit" value="Submit" />
+</form>
+

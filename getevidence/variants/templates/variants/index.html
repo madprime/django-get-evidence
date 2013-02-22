@@ -1,0 +1,10 @@
+{% if variant_list %}
+    <ul>
+    {% for variant in variant_list %}
+        <li><a href="{% url 'variants:detail' variant.name %}">
+	    {{ variant.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No variants are available.</p>
+{% endif %}
