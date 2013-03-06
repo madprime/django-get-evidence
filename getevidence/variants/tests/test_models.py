@@ -3,7 +3,7 @@ Tests models.py in variants app.
 """
 
 from django.test import TestCase
-from ..models import parse_variant, variant_lookup, DbSNP, Gene, Variant
+from ..models import parse_variant, variant_lookup, DbSNP, Gene, Variant, VariantReview
 
 
 class VariantsModelsTest(TestCase):
@@ -62,7 +62,24 @@ class VariantsModelsTest(TestCase):
         Variant.objects.create(gene=g, aa_reference='V',
                                aa_position=617, aa_variant='F')
 
+    def test_Variant_dbSNP_add_and_remove(self):
+        """Tests adding dbSNP (ManyToMany) to Variant."""
+        s = DbSNP.objects.get(rsid='rs334')
+        v = Variant.objects.get(gene__hgnc_name='HBB',
+                                aa_reference='E',
+                                aa_position=7, aa_variant='V')
+        if s in v.dbsnps.all():
+            v.dbsnps.remove(s)
+        v.dbsnps.add(s)
+        v.dbsnps.remove(s)
+
     def test_Variant_delete_with_HBB_E7V(self):
         """Tests Variant deletion."""
         Variant.objects.get(gene__hgnc_name='HBB', aa_reference='E',
                             aa_position=7, aa_variant='V').delete()
+
+    def test_VariantReview_create_with_HBB_E7V(self):
+        v = Variant.objects.get(gene__hgnc_name='HBB', aa_reference='E',
+                                aa_position=7, aa_variant='V')
+        VariantReview.objects.create(variant=v,
+                                     review_long="Causes sickle anemia.")
