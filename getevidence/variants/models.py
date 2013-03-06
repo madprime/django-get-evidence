@@ -6,30 +6,15 @@ Variant models
 Functions
 =========
 
-parse_variant(variant_string):  returns gene, amino acids, and position 
-                                parsed from a variant string
-
-variant_lookup(variant_string): returns Variant object for variant string
-
+parse_variant(string):  Parse variants identified by gene and amino acid change
+variant_lookup(string): Find and return Variant matching string
 
 Models
 ======
 
-DbSNP
-    rsid:         dbSNP ID (CharField)
-
-Variant
-    gene:         Gene from genes.models (ForeignKey)
-    aa_reference: amino acid(s) for reference it this position (CharField)
-    aa_position:  position of amino acid variant (IntegerField)
-    aa_variant:   variant amino acid(s) at this position (CharField)
-    dbsnps:       DbSNP (ManyToManyField)
-
-    Note: amino acids are recorded according to single letter codes.
-
-VariantReview
-    variant:      Variant (OneToOneField)
-    review_long:  text containing variant interpretation (CharField)
+DbSNP:         Information for a dbSNP entry
+Variant:       Tracks immutable variant data
+VariantReview: Tracks user-editable data for a variant
 
 """
 
@@ -81,11 +66,11 @@ class DbSNP(models.Model):
     than two alleles (e.g. triallelic)
 
     Data attributes:
-    rsid: dbSNP identifier (CharField)
+    rsid: dbSNP identifier (CharField, unique)
 
     """
 
-    rsid = models.CharField(max_length = 16)
+    rsid = models.CharField(max_length=16, unique=True)
 
     def __unicode__(self):
         """Returns string with dbSNP identifier."""
@@ -107,21 +92,15 @@ class Variant(models.Model):
 
     """
     gene = models.ForeignKey(Gene)
-
-    aa_reference = models.CharField(
-        max_length = 10,
-        verbose_name='reference amino acid',
-        )
-    aa_position = models.IntegerField(
-        verbose_name='amino acid position',
-        )
-    aa_variant = models.CharField(
-        max_length = 10,
-        verbose_name='variant amino acid',
-        )
+    aa_reference = models.CharField(max_length=10,
+                                    verbose_name='reference amino acid')
+    aa_position = models.IntegerField(verbose_name='amino acid position')
+    aa_variant = models.CharField(max_length=10,
+                                  verbose_name='variant amino acid')
     dbsnps = models.ManyToManyField(DbSNP)
 
     class Meta:
+        """Defines combination of gene and amino acid change as unique."""
         unique_together = (('gene', 'aa_reference', 
                             'aa_position', 'aa_variant'),)
 
@@ -142,7 +121,6 @@ class VariantReview(models.Model):
 
     """
     variant = models.OneToOneField(Variant)
-
     review_long = models.TextField()
 
     def __unicode__(self):
