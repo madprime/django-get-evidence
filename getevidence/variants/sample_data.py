@@ -2,16 +2,8 @@
 
 from models import DbSNP, Gene, Variant, VariantReview
 
-def create_sample_data():
-    """Creates test data in database."""
-
-    # Erases all old data.
-    Gene.objects.all().delete()
-    Variant.objects.all().delete()
-    DbSNP.objects.all().delete()
-
-
-    # 01: HBB-E7V
+def create_HBB_E7V():
+    """Create sample data for HBB-E7V."""
     g01, unused = Gene.objects.get_or_create(hgnc_name='HBB',
                                              genetests=True,
                                              genereviews=True)
@@ -35,7 +27,8 @@ def create_sample_data():
                review_long="Causes sickle cell anemia.")
 
 
-    # 02: JAK2-V617F
+def create_JAK2_V617F():
+    """Create sample data for JAK2-V617F."""
     g02, unused = Gene.objects.get_or_create(hgnc_name='JAK2',
                                              genetests=True,
                                              genereviews=False)
@@ -59,4 +52,16 @@ def create_sample_data():
                review_long="Acquired mutation in blood stem cells, " +
                            "associated with increased risk of " +
                            "myeloproliferative disorders.")
+
+
+def create_sample_data():
+    """Creates test data in database."""
+
+    # Erases all old data.
+    Gene.objects.all().delete()
+    Variant.objects.all().delete()
+    DbSNP.objects.all().delete()
+
+    create_HBB_E7V()
+    create_JAK2_V617F()
 
