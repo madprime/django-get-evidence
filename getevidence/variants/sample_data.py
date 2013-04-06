@@ -46,7 +46,7 @@ def create_JAK2_V617F():
     if not s02 in v02.dbsnps.all():
         v02.dbsnps.add(s02)
     try:
-        vr02 = VariantReview.objects.get(variant__id=v01.id)
+        vr02 = VariantReview.objects.get(variant__id=v02.id)
     except VariantReview.DoesNotExist:
         vr02 = VariantReview.objects.create(variant=v02,
                review_long="Acquired mutation in blood stem cells, " +
