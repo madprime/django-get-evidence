@@ -2,6 +2,7 @@
 Tests views.py in variants app.
 """
 
+import re
 from django.test import TestCase
 from django.test.client import Client
 from ..sample_data import create_sample_data
@@ -36,6 +37,16 @@ class VariantsViewsTest(TestCase):
         self.assertEqual(VariantReview.objects.get(variant=v).review_long,
                          "Most common cause of sickle cell anemia.")
 
+        # Test poorly formatted variant.
+        response = self.cl.post('/variant/E7V-HBB/submit_edit',
+                                {'variant_review_long': "Filler."})
+        self.assertTrue(re.search("Badly formatted variant", response.content))
+
+        # Test nonexistent variant.
+        response = self.cl.post('/variant/HBB-E27V/submit_edit',
+                                {'variant_review_long': "Filler."})
+        self.assertTrue(re.search("No variant found", response.content))
+
     def test_submit_new(self):
         """Test submitting a new variant."""
         response = self.cl.post('/variant/submit_new',
@@ -50,3 +61,43 @@ class VariantsViewsTest(TestCase):
         v = Variant.objects.get(gene__hgnc_name='HFE', aa_reference='C',
                                 aa_position=282, aa_variant='Y')
         self.assertTrue(v)
+
+        # Test poorly formatted variant.
+        response = self.cl.post('/variant/submit_new',
+                                {'gene': 'HFE',
+                                 'aa_reference': 'C',
+                                 'aa_position': 'Y',
+                                 'aa_variant': '282'})
+        self.assertTrue(re.search("poorly formatted", response.content))
+
+        # Test already existing variant.
+        response = self.cl.post('/variant/submit_new',
+                                {'gene': 'HBB',
+                                 'aa_reference': 'E',
+                                 'aa_position': '7',
+                                 'aa_variant': 'V'})
+        self.assertTrue(re.search("already exists", response.content))
+
+    def test_new(self):
+        """Test new variant entry page."""
+        response = self.cl.get('/variant/new')
+        self.assertEqual(response.status_code, 200)
+
+    def test_detail(self):
+        """Test variant detail page."""
+        response = self.cl.get('/variant/HBB-E7V')
+        self.assertEqual(response.status_code, 200)
+        response_var = response.context['variant']
+        response_varrev = response.context['variant_review']
+        self.assertEqual(response_var.gene.hgnc_name, 'HBB')
+        self.assertEqual(response_var.aa_reference, 'E')
+        self.assertEqual(response_var.aa_position, 7)
+        self.assertEqual(response_var.aa_variant, 'V')
+        self.assertEqual(response_varrev.review_summary,
+                         "Causes sickle cell anemia.")
+        # Test poorly formatted variant.
+        response = self.cl.get('/variant/E7V-HBB')
+        self.assertTrue(re.search("Badly formatted", response.content))
+        # Test not existing variant.
+        response = self.cl.get('/variant/HBB-E27V')
+        self.assertTrue(re.search("No variant found", response.content))

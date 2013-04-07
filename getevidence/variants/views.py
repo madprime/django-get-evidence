@@ -16,6 +16,7 @@ detail:      view to display Variant
 """
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from genes.models import gene_lookup, Gene
@@ -46,35 +47,40 @@ def submit_edit(request, variant_pattern):
 
 def submit_new(request):
     """Creates new Variant based on POST data."""
-    gene_name = request.POST['gene']
-    aa_ref = request.POST['aa_reference']
-    aa_pos = int(request.POST['aa_position'])
-    aa_var = request.POST['aa_variant']
 
-    # Test that combined string is parseable.
-    variant_string = gene_name + '-' + aa_ref + str(aa_pos) + aa_var
+    gene_name = aa_ref = aa_pos = aa_var = None
 
     # If parse_variant works: create gene, variant, and variantreview.
     try:
+        gene_name = request.POST['gene']
+        aa_ref = request.POST['aa_reference']
+        aa_pos = int(request.POST['aa_position'])
+        aa_var = request.POST['aa_variant']
+
+        # Test that combined string is parseable.
+        variant_string = gene_name + '-' + aa_ref + str(aa_pos) + aa_var
         parse_variant(variant_string)
-
-        # Check if gene already exists, otherwise create and save.
-        try:
-            gene = gene_lookup(request.POST['gene'])
-        except Gene.DoesNotExist:
-            gene = Gene(hgnc_name=request.POST['gene'])
-            gene.save()
-
-        variant = Variant(gene = gene,
-                          aa_reference = aa_ref,
-                          aa_position = aa_pos,
-                          aa_variant = aa_var)
-        variant.save()
-        variantreview = VariantReview(variant = variant, review_long = '')
-        variantreview.save()
-        return HttpResponseRedirect(reverse('variants:index'))
-    except AssertionError:
+    except (AssertionError, ValueError):
         return HttpResponse("Sorry, your variant data looks poorly formatted.")
+
+    # Check if gene already exists, otherwise create and save.
+    try:
+        gene = gene_lookup(request.POST['gene'])
+    except Gene.DoesNotExist:
+        gene = Gene(hgnc_name=request.POST['gene'])
+        gene.save()
+
+    variant = Variant(gene = gene,
+                      aa_reference = aa_ref,
+                      aa_position = aa_pos,
+                      aa_variant = aa_var)
+    try:
+        variant.save()
+    except IntegrityError:
+        return HttpResponse("Sorry, this variant already exists.)")
+    variantreview = VariantReview(variant = variant, review_long = '')
+    variantreview.save()
+    return HttpResponseRedirect(reverse('variants:index'))
 
 
 def new(request, error=None):
