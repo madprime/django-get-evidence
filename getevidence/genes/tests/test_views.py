@@ -3,11 +3,11 @@ Tests views.py in genes app.
 """
 
 from django.test import TestCase
+from django.test.client import Client
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class GenesViewsTest(TestCase):
+    """Tests the functions and models in views.py."""
+
+    def setUp(self):
+        self.cl = Client()

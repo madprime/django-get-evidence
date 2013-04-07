@@ -121,6 +121,7 @@ class VariantReview(models.Model):
 
     """
     variant = models.OneToOneField(Variant)
+
     review_long = models.TextField()
 
     def __unicode__(self):
