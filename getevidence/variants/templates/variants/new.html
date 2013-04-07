@@ -1,3 +1,6 @@
+{% load bootstrap_toolkit %}
+{% bootstrap_stylesheet_tag %}
+
 <h1>New Variant</h1>
 
 <form action="{% url 'variants:submit_new' %}" method="post">
@@ -8,4 +11,3 @@ Position (integer): <input type="text" name="aa_position" /><br />
 Variant amino acid (single letter): <input type="text" name="aa_variant" /><br />
 <input type="submit" value="Submit" />
 </form>
-

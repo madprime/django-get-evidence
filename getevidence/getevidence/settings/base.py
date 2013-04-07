@@ -154,6 +154,8 @@ DJANGO_APPS = (
     # 'django.contrib.admindocs',
 )
 THIRD_PARTY_APPS = (
+    # UI web design:
+    'bootstrap_toolkit',
     # Database migration helpers:
     # 'south',
 )

@@ -1,3 +1,6 @@
+{% load bootstrap_toolkit %}
+{% bootstrap_stylesheet_tag %}
+
 <h1>{{ variant.name }}</h1>
 
 <form action="{% url 'variants:submit_edit' variant.name %}" method="post">
@@ -6,4 +9,3 @@
 {{ variant.variantreview.review_long }}</textarea>
 <input type="submit" value="Submit" />
 </form>
-
