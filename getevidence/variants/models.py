@@ -122,8 +122,40 @@ class VariantReview(models.Model):
     """
     variant = models.OneToOneField(Variant)
 
+    review_summary = models.TextField()
+
+    SCORE_CHOICES = ( (-1, -1), (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) )
+    evidence_computational = models.SmallIntegerField(null=True,
+                                                      choices=SCORE_CHOICES)
+    evidence_functional = models.SmallIntegerField(null=True,
+                                                   choices=SCORE_CHOICES)
+    evidence_casecontrol = models.SmallIntegerField(null=True,
+                                                    choices=SCORE_CHOICES)
+    evidence_familial = models.SmallIntegerField(null=True,
+                                                 choices=SCORE_CHOICES)
+    clinical_severity = models.SmallIntegerField(null=True,
+                                                 choices=SCORE_CHOICES)
+    clinical_treatability = models.SmallIntegerField(null=True,
+                                                     choices=SCORE_CHOICES)
+    clinical_penetrance = models.SmallIntegerField(null=True,
+                                                   choices=SCORE_CHOICES)
+
+    impact = models.CharField(max_length=20,
+                              choices=(('ben', 'benign'),
+                                       ('pat', 'pathogenic'),
+                                       ('pha', 'pharmacogenetic'),
+                                       ('pro', 'protective'),
+                                       ('not', 'not reviewed')),
+                              default='not' )
+    inheritance = models.CharField(max_length=20,
+                                   choices=(('dom', 'dominant'),
+                                            ('rec', 'recessive'),
+                                            ('oth', 'other'),
+                                            ('und', 'undefined in literature'),
+                                            ('unk', 'unknown or not review')),
+                                   default='unk' )
     review_long = models.TextField()
 
     def __unicode__(self):
         """Returns text containing long variant review."""
-        return self.review_long
+        return self.review_summary

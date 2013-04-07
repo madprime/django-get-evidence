@@ -20,11 +20,20 @@ def create_HBB_E7V():
                                      aa_variant='V')
     if not s01 in v01.dbsnps.all():
         v01.dbsnps.add(s01)
-    try:
-        vr01 = VariantReview.objects.get(variant__id=v01.id)
-    except VariantReview.DoesNotExist:
-        vr01 = VariantReview.objects.create(variant=v01, 
-               review_long="Causes sickle cell anemia.")
+
+    vr01 = VariantReview.objects.create(variant=v01,
+               review_summary="Causes sickle cell anemia.",
+               evidence_computational=1,
+               evidence_functional=3,
+               evidence_casecontrol=5,
+               evidence_familial=5,
+               clinical_severity=4,
+               clinical_treatability=4,
+               clinical_penetrance=5,
+               impact = 'pat',
+               inheritance = 'rec',
+               review_long = "Most common cause of sickle-cell anemia, most often " +
+                             "found in individuals with African ancestry.")
 
 
 def create_JAK2_V617F():
