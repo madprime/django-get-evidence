@@ -129,7 +129,7 @@ class VariantReview(models.Model):
     clinical_treatability:  clinical treatability score (SmallIntegerField)
     clinical_penetrance:    genetic penetrance score (SmallIntegerField)
     """
-    variant = models.OneToOneField(Variant)
+    variant = models.OneToOneField(Variant, editable=False)
 
     review_summary = models.TextField()
     review_long = models.TextField()

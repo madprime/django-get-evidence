@@ -21,7 +21,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from genes.models import gene_lookup, Gene
 from .models import parse_variant, variant_lookup, Variant, VariantReview
-
+from .forms import VariantReviewForm
 
 def index(request):
     """Lists Variants."""
@@ -101,6 +101,7 @@ def detail(request, variant_pattern, template='variants/detail.html'):
                       {'variant': variant,
                        'variant_review': variant.variantreview,
                        'dbsnps': variant.dbsnps.all(),
+                       'form': VariantReviewForm(instance=variant.variantreview)
                        })
     except AssertionError:
         return HttpResponse("Badly formatted variant? " + variant_pattern)
