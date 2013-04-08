@@ -116,14 +116,41 @@ class VariantReview(models.Model):
     """Tracks user-editable data for a variant.
 
     Data attributes:
-    variant:     Variant (OneToOneField)
-    review_long: text containing variant interpretation (CharField)
-
+    variant:                Variant (OneToOneField)
+    review_summary:         interpretation summary (CharField)
+    review_long:            extended interpretation (CharField)
+    impact:                 impact (pathogenic, benign, etc) (CharField)
+    inheritance:            inheritance (recessive, dominant, etc) (CharField)
+    evidence_computational: computational evidence score (SmallIntegerField)
+    evidence_functional:    functional evidence score (SmallIntegerField)
+    evidence_casecontrol:   case/contral evidence score (SmallIntegerField)
+    evidence_familial:      familial evidence score (SmallIntegerField)
+    clinical_severity:      clinical severity score (SmallIntegerField)
+    clinical_treatability:  clinical treatability score (SmallIntegerField)
+    clinical_penetrance:    genetic penetrance score (SmallIntegerField)
     """
     variant = models.OneToOneField(Variant)
 
     review_summary = models.TextField()
+    review_long = models.TextField()
+    impact_choices = (('ben', 'benign'),
+                      ('pat', 'pathogenic'),
+                      ('pha', 'pharmacogenetic'),
+                      ('pro', 'protective'),
+                      ('not', 'not reviewed'))
+    impact = models.CharField(max_length=3,
+                              choices=impact_choices,
+                              default='not' )
+    inheritance_choices = (('dom', 'dominant'),
+                           ('rec', 'recessive'),
+                           ('oth', 'other'),
+                           ('und', 'undefined in literature'),
+                           ('unk', 'unknown or not review'))
+    inheritance = models.CharField(max_length=3,
+                                   choices=inheritance_choices,
+                                   default='unk' )
 
+    # Define evidence and clinical importance scores.
     SCORE_CHOICES = ( (-1, -1), (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) )
     evidence_computational = models.SmallIntegerField(null=True,
                                                       choices=SCORE_CHOICES)
@@ -139,22 +166,6 @@ class VariantReview(models.Model):
                                                      choices=SCORE_CHOICES)
     clinical_penetrance = models.SmallIntegerField(null=True,
                                                    choices=SCORE_CHOICES)
-
-    impact = models.CharField(max_length=20,
-                              choices=(('ben', 'benign'),
-                                       ('pat', 'pathogenic'),
-                                       ('pha', 'pharmacogenetic'),
-                                       ('pro', 'protective'),
-                                       ('not', 'not reviewed')),
-                              default='not' )
-    inheritance = models.CharField(max_length=20,
-                                   choices=(('dom', 'dominant'),
-                                            ('rec', 'recessive'),
-                                            ('oth', 'other'),
-                                            ('und', 'undefined in literature'),
-                                            ('unk', 'unknown or not review')),
-                                   default='unk' )
-    review_long = models.TextField()
 
     def __unicode__(self):
         """Returns text containing long variant review."""
