@@ -3,7 +3,7 @@ Tests models.py in variants app.
 """
 
 from django.test import TestCase
-from ..models import parse_variant, variant_lookup, DbSNP, Gene, Variant, VariantReview
+from ..models import DbSNP, Gene, Variant, VariantReview
 
 
 class VariantsModelsTest(TestCase):
@@ -27,8 +27,8 @@ class VariantsModelsTest(TestCase):
             v.save()
 
     def test_parse_variant_with_HBB_E7V(self):
-        """Tests function parse_variant with 'HBB-E7V'."""
-        output = parse_variant('HBB-E7V')
+        """Tests classmethod parse_variant with 'HBB-E7V'."""
+        output = Variant.parse_variant('HBB-E7V')
         self.assertIn('gene_name', output)
         self.assertIn('aa_ref', output)
         self.assertIn('aa_pos', output)
@@ -39,8 +39,8 @@ class VariantsModelsTest(TestCase):
         self.assertEqual(output['aa_var'], 'V')
 
     def test_variant_lookup_with_HBB_E7V(self):
-        """Tests function variant_lookup with 'HBB-E7V'."""
-        variant = variant_lookup('HBB-E7V')
+        """Tests classmethod variant_lookup with 'HBB-E7V'."""
+        variant = Variant.variant_lookup('HBB-E7V')
         self.assertEqual(variant.gene.hgnc_name, 'HBB')
         self.assertEqual(variant.aa_reference, 'E')
         self.assertEqual(variant.aa_position, 7)

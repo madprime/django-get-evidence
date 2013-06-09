@@ -17,7 +17,7 @@ from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from genes.models import gene_lookup, Gene
-from .models import parse_variant, variant_lookup, Variant, VariantReview
+from .models import Variant, VariantReview
 from .forms import VariantReviewForm
 
 def index(request):
@@ -29,7 +29,7 @@ def index(request):
 def edit(request, variant_pattern):
     """Edits VariantReview data for a Variant."""
     try:
-        variant = variant_lookup(variant_pattern)
+        variant = Variant.variant_lookup(variant_pattern)
         if request.method == 'POST':
             form = VariantReviewForm(request.POST, instance=variant.variantreview)
             form.save()
@@ -67,7 +67,7 @@ def new(request, error=None):
 
             # Test that combined string is parseable.
             variant_string = gene_name + '-' + aa_ref + str(aa_pos) + aa_var
-            parse_variant(variant_string)
+            Variant.parse_variant(variant_string)
         except (AssertionError, ValueError):
             return HttpResponse("Sorry, variant data looks poorly formatted.")
 
@@ -99,7 +99,7 @@ def detail(request, variant_pattern):
 
     """
     try:
-        variant = variant_lookup(variant_pattern)
+        variant = Variant.variant_lookup(variant_pattern)
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,

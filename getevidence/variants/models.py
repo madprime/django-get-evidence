@@ -3,15 +3,6 @@
 Variant models
 ==============
 
-Functions
-=========
-
-parse_variant(string):  Parse variants identified by gene and amino acid change
-variant_lookup(string): Find and return Variant matching string
-
-Models
-======
-
 DbSNP:         Information for a dbSNP entry
 Variant:       Tracks immutable variant data
 VariantReview: Tracks user-editable data for a variant
@@ -21,40 +12,6 @@ VariantReview: Tracks user-editable data for a variant
 import re
 from django.db import models
 from genes.models import Gene
-
-
-VARIANT_RE = r'^([A-Z0-9]+)-([A-Z]+)([0-9]+)([A-Z]+)$'
-
-
-def parse_variant(variant_string):
-    """Parse variants identified by gene and amino acid change.
-
-    Examples: HBB-E7V, APOE-C130R
-
-    The first part before the dash is the HGNC gene symbol.
-    After the dash is the reference amino acid, the amino acid position,
-    and the variant amino acid.
-
-    """
-    assert re.match(VARIANT_RE, variant_string)
-    parsed = re.match(VARIANT_RE, variant_string).groups()
-    return { 'gene_name': parsed[0],
-             'aa_ref': parsed[1],
-             'aa_pos': int(parsed[2]),
-             'aa_var': parsed[3],
-             }
-
-
-def variant_lookup(variant_string):
-    """Find and return Variant in database matching identifying string."""
-    var_parse = parse_variant(variant_string)
-    var_match = Variant.objects.get(
-        gene__hgnc_name__exact=var_parse['gene_name'],
-        aa_reference__exact=var_parse['aa_ref'],
-        aa_position__exact=var_parse['aa_pos'],
-        aa_variant__exact=var_parse['aa_var'],
-        )
-    return var_match
 
 
 class DbSNP(models.Model):
@@ -91,13 +48,49 @@ class Variant(models.Model):
     is required to be unique.
 
     """
+    # Regex validates and parses strings representing variants.
+    VARIANT_RE = r'^([A-Z0-9]+)-([A-Z]+)([0-9]+)([A-Z]+)$'
+
+    # Combination of gene and amino acid change uniquely define Variant.
     gene = models.ForeignKey(Gene)
     aa_reference = models.CharField(max_length=10,
                                     verbose_name='reference amino acid')
     aa_position = models.IntegerField(verbose_name='amino acid position')
     aa_variant = models.CharField(max_length=10,
                                   verbose_name='variant amino acid')
+
+    # ManyToMany because dbSNP entries can be duplicate or tri-allelic.
     dbsnps = models.ManyToManyField(DbSNP)
+
+    @classmethod
+    def parse_variant(cls, variant_string):
+        """Parse variants identified by gene and amino acid change.
+
+        Examples: HBB-E7V, APOE-C130R
+
+        The first part before the dash is the HGNC gene symbol.
+        After the dash is the reference amino acid, the amino acid position,
+        and the variant amino acid.
+        """
+        assert re.match(cls.VARIANT_RE, variant_string)
+        parsed = re.match(cls.VARIANT_RE, variant_string).groups()
+        return { 'gene_name': parsed[0],
+                 'aa_ref': parsed[1],
+                 'aa_pos': int(parsed[2]),
+                 'aa_var': parsed[3],
+                 }
+
+    @classmethod
+    def variant_lookup(cls, variant_string):
+        """Find and return Variant in database matching identifying string."""
+        var_parse = cls.parse_variant(variant_string)
+        var_match = cls.objects.get(
+            gene__hgnc_name__exact=var_parse['gene_name'],
+            aa_reference__exact=var_parse['aa_ref'],
+            aa_position__exact=var_parse['aa_pos'],
+            aa_variant__exact=var_parse['aa_var'],
+            )
+        return var_match
 
     class Meta:
         """Defines combination of gene and amino acid change as unique."""
