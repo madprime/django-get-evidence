@@ -22,11 +22,20 @@ class VariantsViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['variant_list']), 2)
 
-    def test_submit_edit(self):
+    def test_edit(self):
         """Test a sample edit submission."""
-        response = self.cl.post('/variant/HBB-E7V/submit_edit', 
-                                {'variant_review_long':
-                                     "Most common cause of sickle cell anemia."})
+        response = self.cl.post('/variant/HBB-E7V/edit',
+                                {'review_summary': "Sickle cell anemia.",
+                                 'review_long': "Acts in recessive manner.",
+                                 'impact': 'pat',
+                                 'inheritance': 'rec',
+                                 'evidence_computational': '1',
+                                 'evidence_functional': '3',
+                                 'evidence_casecontrol': '5',
+                                 'evidence_familial': '5',
+                                 'clinical_severity': '4',
+                                 'clinical_treatability': '3',
+                                 'clinical_penetrance': '5'})
 
         # Should perform a redirect.
         self.assertEqual(response.status_code, 302)
@@ -35,15 +44,15 @@ class VariantsViewsTest(TestCase):
         v = Variant.objects.get(gene__hgnc_name='HBB', aa_reference='E',
                                 aa_position=7, aa_variant='V')
         self.assertEqual(VariantReview.objects.get(variant=v).review_long,
-                         "Most common cause of sickle cell anemia.")
+                         "Acts in recessive manner.")
 
         # Test poorly formatted variant.
-        response = self.cl.post('/variant/E7V-HBB/submit_edit',
+        response = self.cl.post('/variant/E7V-HBB/edit',
                                 {'variant_review_long': "Filler."})
         self.assertTrue(re.search("Badly formatted variant", response.content))
 
         # Test nonexistent variant.
-        response = self.cl.post('/variant/HBB-E27V/submit_edit',
+        response = self.cl.post('/variant/HBB-E27V/edit',
                                 {'variant_review_long': "Filler."})
         self.assertTrue(re.search("No variant found", response.content))
 

@@ -5,8 +5,6 @@ Variant views
 
 Views
 =====
-
-submit_edit: update Variant based on POST data
 submit_new:  create Variant based on POST data
 index:       view to list Variants
 new:         view to create new Variant
@@ -29,14 +27,22 @@ def index(request):
     return render(request, 'variants/index.html', {'variant_list': variant_list})
 
 
-def submit_edit(request, variant_pattern):
-    """Edits Variant based on POST data."""
+def edit(request, variant_pattern):
+    """Edits VariantReview data for a Variant."""
     try:
         variant = variant_lookup(variant_pattern)
-        variant.variantreview.review_long = request.POST['variant_review_long']
-        variant.variantreview.save()
-        return HttpResponseRedirect(reverse('variants:detail', 
-                                            args=(variant_pattern,)))
+        if request.method == 'POST':
+            form = VariantReviewForm(request.POST, instance=variant.variantreview)
+            form.save()
+            return HttpResponseRedirect(reverse('variants:detail',
+                                                args=(variant_pattern,)))
+        else:
+            return render(request, 'variants/edit.html',
+                      {'variant': variant,
+                       'variant_review': variant.variantreview,
+                       'dbsnps': variant.dbsnps.all(),
+                       'form': VariantReviewForm(instance=variant.variantreview)
+                       })
     except AssertionError:
         return HttpResponse("Submit edit - Badly formatted variant? " + 
                             variant_pattern)
@@ -88,7 +94,7 @@ def new(request, error=None):
     return render(request, 'variants/new.html', {'error': error})
 
 
-def detail(request, variant_pattern, template='variants/detail.html'):
+def detail(request, variant_pattern):
     """Display Variant and VariantReview data for viewing or editing.
 
     Default template displays for viewing. Another template may be used 
@@ -97,11 +103,10 @@ def detail(request, variant_pattern, template='variants/detail.html'):
     """
     try:
         variant = variant_lookup(variant_pattern)
-        return render(request, template,
+        return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,
                        'dbsnps': variant.dbsnps.all(),
-                       'form': VariantReviewForm(instance=variant.variantreview)
                        })
     except AssertionError:
         return HttpResponse("Badly formatted variant? " + variant_pattern)

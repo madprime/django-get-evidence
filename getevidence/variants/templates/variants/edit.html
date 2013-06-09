@@ -3,7 +3,7 @@
 
 <h1>{{ variant.name }}</h1>
 
-<form action="{% url 'variants:submit_edit' variant.name %}" method="post">
+<form action="{% url 'variants:edit' variant.name %}" method="post">
 {% csrf_token %}
 {{ form|as_bootstrap }}
 <input type="submit" value="Submit" />
