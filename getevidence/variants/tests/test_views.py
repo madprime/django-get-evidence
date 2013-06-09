@@ -56,9 +56,14 @@ class VariantsViewsTest(TestCase):
                                 {'variant_review_long': "Filler."})
         self.assertTrue(re.search("No variant found", response.content))
 
-    def test_submit_new(self):
-        """Test submitting a new variant."""
-        response = self.cl.post('/variant/submit_new',
+    def test_new(self):
+        """Test new variant entry page."""
+        # Test creating empty page.
+        response = self.cl.get('/variant/new')
+        self.assertEqual(response.status_code, 200)
+
+        # Test creating new variant.
+        response = self.cl.post('/variant/new',
                                 {'gene': 'HFE',
                                  'aa_reference': 'C',
                                  'aa_position': '282',
@@ -72,7 +77,7 @@ class VariantsViewsTest(TestCase):
         self.assertTrue(v)
 
         # Test poorly formatted variant.
-        response = self.cl.post('/variant/submit_new',
+        response = self.cl.post('/variant/new',
                                 {'gene': 'HFE',
                                  'aa_reference': 'C',
                                  'aa_position': 'Y',
@@ -80,17 +85,12 @@ class VariantsViewsTest(TestCase):
         self.assertTrue(re.search("poorly formatted", response.content))
 
         # Test already existing variant.
-        response = self.cl.post('/variant/submit_new',
+        response = self.cl.post('/variant/new',
                                 {'gene': 'HBB',
                                  'aa_reference': 'E',
                                  'aa_position': '7',
                                  'aa_variant': 'V'})
         self.assertTrue(re.search("already exists", response.content))
-
-    def test_new(self):
-        """Test new variant entry page."""
-        response = self.cl.get('/variant/new')
-        self.assertEqual(response.status_code, 200)
 
     def test_detail(self):
         """Test variant detail page."""

@@ -3,7 +3,7 @@
 
 <h1>New Variant</h1>
 
-<form action="{% url 'variants:submit_new' %}" method="post">
+<form action="{% url 'variants:new' %}" method="post">
 {% csrf_token %}
 Gene: <input type="text" name="gene" /><br />
 Reference amino acid (single letter): <input type="text" name="aa_reference" /><br />
