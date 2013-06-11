@@ -1,8 +1,8 @@
-{% load bootstrap_toolkit %}
-{% bootstrap_stylesheet_tag %}
+{% extends "base.html" %}
 
-<p><h1>{{ variant.name }}</h1></p>
+{% block page_title %}{{ variant.name }}{% endblock page_title %}
 
+{% block content %}
 <p>
 Gene: {{ variant.gene.hgnc_name }}
 </p>
@@ -50,3 +50,4 @@ dbSNP: {{ dbsnps|join:", " }}
 <p>
 <a href="{% url 'variants:edit' variant.name %}">Edit variant</a>
 </p>
+{% endblock content %}

@@ -1,10 +1,12 @@
-{% load bootstrap_toolkit %}
-{% bootstrap_stylesheet_tag %}
+{% extends "base.html" %}
 
-<h1>{{ variant.name }}</h1>
+{% block page_title %}{{ variant.name }}{% endblock page_title %}
 
+{% block content %}
 <form action="{% url 'variants:edit' variant.name %}" method="post">
 {% csrf_token %}
-{{ form|as_bootstrap }}
+{{ form }}
+<br/>
 <input type="submit" value="Submit" />
 </form>
+{% endblock content %}

@@ -1,8 +1,8 @@
-{% load bootstrap_toolkit %}
-{% bootstrap_stylesheet_tag %}
+{% extends "base.html" %}
 
-<h1>New Variant</h1>
+{% block page_title %}New Variant{% endblock page_title %}
 
+{% block content %}
 <form action="{% url 'variants:new' %}" method="post">
 {% csrf_token %}
 Gene: <input type="text" name="gene" /><br />
@@ -11,3 +11,4 @@ Position (integer): <input type="text" name="aa_position" /><br />
 Variant amino acid (single letter): <input type="text" name="aa_variant" /><br />
 <input type="submit" value="Submit" />
 </form>
+{% endblock content %}

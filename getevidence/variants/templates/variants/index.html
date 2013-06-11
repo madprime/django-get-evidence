@@ -1,6 +1,8 @@
-{% load bootstrap_toolkit %}
-{% bootstrap_stylesheet_tag %}
+{% extends "base.html" %}
 
+{% block page_title %}Variants{% endblock page_title %}
+
+{% block content %}
 {% if variant_list %}
     <ul>
     {% for variant in variant_list %}
@@ -11,3 +13,4 @@
 {% else %}
     <p>No variants are available.</p>
 {% endif %}
+{% endblock content %}
