@@ -3,44 +3,43 @@
 {% block page_title %}{{ variant.name }}{% endblock page_title %}
 
 {% block content %}
-<p>
-Gene: {{ variant.gene.hgnc_name }}
-</p>
+<div class="row">
+  <div class="span10 lead">
+    {{ variant_review.review_summary }}
+  </div>
+  <div class="span2 muted text-right">
+      Gene: {{ variant.gene.hgnc_name }}
+  </div>
+</div>
 
-<p>
-Summary: {{ variant_review.review_summary }}
-</p>
 
-<p>
-<h3>Evidence</h3>
-Computational: {{ variant_review.evidence_computational }}
-<br />
-Functional: {{ variant_review.evidence_functional }}
-<br />
-Case/control: {{ variant_review.evidence_casecontrol }}
-<br />
-Familial: {{ variant_review.evidence_functional }}
-</p>
-<p>
-<h3>Clinical impact</h3>
-Severity: {{ variant_review.clinical_severity }}
-<br />
-Treatability: {{ variant_review.clinical_treatability }}
-<br />
-Penetrance: {{ variant_review.clinical_penetrance }}
-</p>
+<div class="row">
+  <div class="span6">
+    <h4>Evidence</h4>
+    Computational: {{ variant_review.evidence_computational }}
+    <br />
+    Functional: {{ variant_review.evidence_functional }}
+    <br />
+    Case/control: {{ variant_review.evidence_casecontrol }}
+    <br />
+    Familial: {{ variant_review.evidence_functional }}
+  </div>
+  <div class="span6">
+    <h4>Clinical impact</h4>
+    Severity: {{ variant_review.clinical_severity }}
+    <br />
+    Treatability: {{ variant_review.clinical_treatability }}
+    <br />
+    Penetrance: {{ variant_review.clinical_penetrance }}
+  </div>
+</div>
+<p/>
 
-<p>
-Impact: {{ variant_review.impact }}
-</p>
+<p><strong>Impact:</strong> {{ variant_review.impact }}</p>
 
-<p>
-Inheritance: {{ variant_review.inheritance }}
-</p>
+<p><strong>Inheritance:</strong> {{ variant_review.inheritance }}</p>
 
-<p>
-{{ variant_review.review_long }}
-</p>
+<p><strong>Long review:</strong> {{ variant_review.review_long }}</p>
 
 <h4> Additional data </h4>
 <p>
