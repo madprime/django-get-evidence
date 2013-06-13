@@ -38,8 +38,10 @@
           <a class="brand" href="#">GET-Evidence</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+	      {% block navbar_list %}
               <li class="active"><a href="/">Home</a></li>
               <li><a href="/variant">Variants</a></li>
+	      {% endblock navbar_list %}
             </ul>
           </div><!--/.nav-collapse -->
         </div>

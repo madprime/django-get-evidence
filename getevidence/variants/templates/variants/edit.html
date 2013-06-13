@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% block page_title %}{{ variant.name }}{% endblock page_title %}
+{% extends "variants/detail.html" %}
 
 {% block content %}
 <form class="form-vertical editor span12" action="{% url 'variants:edit' variant.name %}" method="post">
