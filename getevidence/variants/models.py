@@ -63,6 +63,19 @@ class Variant(models.Model):
     dbsnps = models.ManyToManyField(DbSNP)
 
     @classmethod
+    def create(cls, gene_name=None, aa_ref=None, aa_pos=None, aa_var=None):
+        try:
+            gene = Gene.gene_lookup(gene_name)
+        except Gene.DoesNotExist:
+            gene = Gene(hgnc_name=gene_name)
+            gene.save()
+        variant = cls(gene = gene,
+                      aa_reference = aa_ref,
+                      aa_position = aa_pos,
+                      aa_variant = aa_var)
+        return variant
+
+    @classmethod
     def parse_variant(cls, variant_string):
         """Parse variants identified by gene and amino acid change.
 

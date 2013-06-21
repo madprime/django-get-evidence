@@ -60,32 +60,25 @@ def new(request, error=None):
 
         # If parse_variant works: create gene, variant, and variantreview.
         try:
-            gene_name = request.POST['gene']
-            aa_ref = request.POST['aa_reference']
-            aa_pos = int(request.POST['aa_position'])
-            aa_var = request.POST['aa_variant']
-
             # Test that combined string is parseable.
-            variant_string = gene_name + '-' + aa_ref + str(aa_pos) + aa_var
+            variant_string = (request.POST['gene'] + '-' +
+                              request.POST['aa_reference'] +
+                              request.POST['aa_position'] + 
+                              request.POST['aa_variant'])
             Variant.parse_variant(variant_string)
         except (AssertionError, ValueError):
             return HttpResponse("Sorry, variant data looks poorly formatted.")
 
-        # Check if gene already exists, otherwise create and save.
-        try:
-            gene = Gene.gene_lookup(request.POST['gene'])
-        except Gene.DoesNotExist:
-            gene = Gene(hgnc_name=request.POST['gene'])
-            gene.save()
-
-        variant = Variant(gene = gene,
-                          aa_reference = aa_ref,
-                          aa_position = aa_pos,
-                          aa_variant = aa_var)
+        # Create new variant
+        variant = Variant.create(gene_name = request.POST['gene'],
+                                 aa_ref = request.POST['aa_reference'],
+                                 aa_pos = request.POST['aa_position'],
+                                 aa_var = request.POST['aa_variant'])
         try:
             variant.save()
         except IntegrityError:
             return HttpResponse("Sorry, this variant already exists.)")
+
         variantreview = VariantReview(variant = variant, review_long = '')
         variantreview.save()
         return HttpResponseRedirect(reverse('variants:index'))
