@@ -16,7 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from genes.models import gene_lookup, Gene
+from genes.models import Gene
 from .models import Variant, VariantReview
 from .forms import VariantReviewForm
 
@@ -73,7 +73,7 @@ def new(request, error=None):
 
         # Check if gene already exists, otherwise create and save.
         try:
-            gene = gene_lookup(request.POST['gene'])
+            gene = Gene.gene_lookup(request.POST['gene'])
         except Gene.DoesNotExist:
             gene = Gene(hgnc_name=request.POST['gene'])
             gene.save()
