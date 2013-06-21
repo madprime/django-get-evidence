@@ -12,6 +12,7 @@ VariantReview: Tracks user-editable data for a variant
 import re
 from django.db import models
 from genes.models import Gene
+from publications.models import Publication
 
 
 class DbSNP(models.Model):
@@ -176,3 +177,35 @@ class VariantReview(models.Model):
     def __unicode__(self):
         """Returns text containing long variant review."""
         return self.review_summary
+
+
+class VariantPublicationReview(models.Model):
+    """Tracks user-editable & variant-specific publication reviews.
+
+    Data attributes:
+    variant:       Variant
+    publication:   Publication from publications.models
+    summary:       review of publication's info regarding variant (TextField)
+
+    """
+    variant = models.ForeignKey(Variant)
+    publication = models.ForeignKey(Publication)
+    summary = models.TextField()
+
+    class Meta:
+        """Defines combination of variant and publication as unique."""
+        unique_together = (('variant', 'publication',))
+
+    def __unicode__(self):
+        """Returns string containing variant, publication, and summary."""
+        return str(self.publication) + ',' + str(self.variant) + ':' + self.summary
+
+    @classmethod
+    def create(cls, variant=None, pmid=None):
+        try:
+            pub = Publication.pub_lookup(pmid)
+        except Publication.DoesNotExist:
+            pub = Publication.create(pmid=pmid)
+            pub.save()
+        varpubreview = cls(variant=variant, publication=pub)
+        return varpubreview

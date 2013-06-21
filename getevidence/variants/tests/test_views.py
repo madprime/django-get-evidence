@@ -56,6 +56,32 @@ class VariantsViewsTest(TestCase):
                                 {'variant_review_long': "Filler."})
         self.assertTrue(re.search("No variant found", response.content))
 
+    def test_add_pub(self):
+        """Test add publication page."""
+        # Test loading page.
+        response = self.cl.get('/variant/HBB-E7V/add_pub')
+        self.assertEqual(response.status_code, 200)
+
+        # Test submitting new publication.
+        response = self.cl.post('/variant/HBB-E7V/add_pub',
+                                {'pmid': '2296310'})
+
+        # After creating should perform a redirect to original variant page.
+        self.assertEqual(response.status_code, 302)
+
+        # Test adding a publication already present.
+        response = self.cl.post('/variant/HBB-E7V/add_pub',
+                                {'pmid': '2296310'})
+        self.assertTrue(re.search("already added", response.content))
+
+        # Test poorly formatted variant.
+        response = self.cl.post('/variant/E7V-HBB/add_pub')
+        self.assertTrue(re.search("Badly formatted", response.content))
+
+        # Test nonexistent variant.
+        response = self.cl.post('/variant/HBB-E27V/add_pub')
+        self.assertTrue(re.search("No variant found", response.content))
+
     def test_new(self):
         """Test new variant entry page."""
         # Test creating empty page.

@@ -16,8 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from genes.models import Gene
-from .models import Variant, VariantReview
+from .models import Variant, VariantReview, VariantPublicationReview
 from .forms import VariantReviewForm
 
 def index(request):
@@ -47,6 +46,36 @@ def edit(request, variant_pattern):
                             variant_pattern)
     except Variant.DoesNotExist:
         return HttpResponse("Submit edit - No variant found? " + 
+                            variant_pattern)
+
+
+def add_pub(request, variant_pattern):
+    """Add publication to variant."""
+    try:
+        variant = Variant.variant_lookup(variant_pattern)
+        varpubreviews = VariantPublicationReview.objects.filter(variant__id=variant.id)
+        if not request.method == 'POST':
+            return render(request, 'variants/add_pub.html',
+                          {'variant': variant,
+                           'variant_review': variant.variantreview,
+                           'dbsnps': variant.dbsnps.all(),
+                           'varpubreviews': varpubreviews,
+                           })
+        else:
+            varpubreview = VariantPublicationReview.create(variant = variant,
+                                                   pmid = request.POST['pmid'])
+            try:
+                varpubreview.save()
+            except IntegrityError:
+                return HttpResponse("Sorry, this publication is already added.")
+            return HttpResponseRedirect(reverse('variants:detail',
+                                                args=(variant_pattern,)))
+
+    except AssertionError:
+        return HttpResponse("Add publication - Badly formatted variant? " +
+                            variant_pattern)
+    except Variant.DoesNotExist:
+        return HttpResponse("Add publication - No variant found? " +
                             variant_pattern)
 
 
@@ -93,10 +122,12 @@ def detail(request, variant_pattern):
     """
     try:
         variant = Variant.variant_lookup(variant_pattern)
+        varpubreviews = VariantPublicationReview.objects.filter(variant__id=variant.id)
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,
                        'dbsnps': variant.dbsnps.all(),
+                       'varpubreviews': varpubreviews,
                        })
     except AssertionError:
         return HttpResponse("Badly formatted variant? " + variant_pattern)

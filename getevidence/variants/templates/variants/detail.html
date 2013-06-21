@@ -49,4 +49,21 @@ dbSNP: {{ dbsnps|join:", " }}
 <p>
 <a href="{% url 'variants:edit' variant.name %}">Edit variant</a>
 </p>
+
+<h4> Publications </h4>
+
+<ul>
+{% for varpubreview in varpubreviews %}
+<li>{{ varpubreview.publication.pmid }}<br />
+{{ varpubreview.publication.pubmed_text }}<br />
+{{ varpubreview.summary }}</li>
+{% endfor %}
+</ul>
+
+{% block add_pub %}
+<p>
+<a href="{% url 'variants:add_pub' variant.name %}">Add publication</a>
+</p>
+{% endblock add_pub %}
+
 {% endblock content %}
