@@ -83,34 +83,26 @@ def new(request, error=None):
     """Create new Variant."""
     if not request.method == 'POST':
         return render(request, 'variants/new.html', {'error': error})
-
     else:
-        gene_name = aa_ref = aa_pos = aa_var = None
-
-        # If parse_variant works: create gene, variant, and variantreview.
+        variant_string = (request.POST['gene'] + '-' +
+                          request.POST['aa_reference'] +
+                          request.POST['aa_position'] +
+                          request.POST['aa_variant'])
         try:
-            # Test that combined string is parseable.
-            variant_string = (request.POST['gene'] + '-' +
-                              request.POST['aa_reference'] +
-                              request.POST['aa_position'] + 
-                              request.POST['aa_variant'])
             Variant.parse_variant(variant_string)
         except (AssertionError, ValueError):
             return HttpResponse("Sorry, variant data looks poorly formatted.")
-
-        # Create new variant
-        variant = Variant.create(gene_name = request.POST['gene'],
-                                 aa_ref = request.POST['aa_reference'],
-                                 aa_pos = request.POST['aa_position'],
-                                 aa_var = request.POST['aa_variant'])
         try:
-            variant.save()
-        except IntegrityError:
-            return HttpResponse("Sorry, this variant already exists.)")
-
-        variantreview = VariantReview(variant = variant, review_long = '')
-        variantreview.save()
-        return HttpResponseRedirect(reverse('variants:index'))
+            Variant.variant_lookup(variant_string)
+            return HttpResponse("Sorry, this variant already exists.")
+        except Variant.DoesNotExist:
+            # The Variant.create() classmethod also creates a VariantReview
+            # and, if necessary, a Gene.
+            Variant.create(gene_name = request.POST['gene'],
+                           aa_ref = request.POST['aa_reference'],
+                           aa_pos = request.POST['aa_position'],
+                           aa_var = request.POST['aa_variant'])
+            return HttpResponseRedirect(reverse('variants:index'))
 
 
 def detail(request, variant_pattern):
