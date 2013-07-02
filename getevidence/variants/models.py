@@ -138,8 +138,8 @@ class VariantReview(models.Model):
     """
     variant = models.OneToOneField(Variant, editable=False)
 
-    review_summary = models.TextField()
-    review_long = models.TextField()
+    review_summary = models.TextField(blank=True)
+    review_long = models.TextField(blank=True)
     impact_choices = (('ben', 'benign'),
                       ('pat', 'pathogenic'),
                       ('pha', 'pharmacogenetic'),
@@ -160,18 +160,25 @@ class VariantReview(models.Model):
     # Define evidence and clinical importance scores.
     SCORE_CHOICES = ( (-1, -1), (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5) )
     evidence_computational = models.SmallIntegerField(null=True,
+                                                      blank=True,
                                                       choices=SCORE_CHOICES)
     evidence_functional = models.SmallIntegerField(null=True,
+                                                   blank=True,
                                                    choices=SCORE_CHOICES)
     evidence_casecontrol = models.SmallIntegerField(null=True,
+                                                    blank=True,
                                                     choices=SCORE_CHOICES)
     evidence_familial = models.SmallIntegerField(null=True,
+                                                 blank=True,
                                                  choices=SCORE_CHOICES)
     clinical_severity = models.SmallIntegerField(null=True,
+                                                 blank=True,
                                                  choices=SCORE_CHOICES)
     clinical_treatability = models.SmallIntegerField(null=True,
+                                                     blank=True,
                                                      choices=SCORE_CHOICES)
     clinical_penetrance = models.SmallIntegerField(null=True,
+                                                   blank=True,
                                                    choices=SCORE_CHOICES)
 
     def __unicode__(self):
