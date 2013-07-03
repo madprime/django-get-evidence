@@ -127,8 +127,10 @@ class Variant(models.Model):
 class VariantReview(models.Model):
     """Tracks user-editable data for a variant.
 
-    Data attributes:
+    Non-editable data attributes:
     variant:                Variant (OneToOneField)
+
+    Editable data attributes:
     review_summary:         interpretation summary (CharField)
     review_long:            extended interpretation (CharField)
     impact:                 impact (pathogenic, benign, etc) (CharField)
@@ -140,6 +142,8 @@ class VariantReview(models.Model):
     clinical_severity:      clinical severity score (SmallIntegerField)
     clinical_treatability:  clinical treatability score (SmallIntegerField)
     clinical_penetrance:    genetic penetrance score (SmallIntegerField)
+    publications:           Publication (ManyToManyField through
+                                         VariantPublicationReview)
     """
     variant = models.OneToOneField(Variant, editable=False)
 
@@ -185,6 +189,9 @@ class VariantReview(models.Model):
     clinical_penetrance = models.SmallIntegerField(null=True,
                                                    blank=True,
                                                    choices=SCORE_CHOICES)
+    # Define publications as ManyToMany through VariantPublicationReview
+    publications = models.ManyToManyField(Publication,
+                                          through='VariantPublicationReview')
 
     def __unicode__(self):
         """Returns text containing long variant review."""
@@ -192,7 +199,7 @@ class VariantReview(models.Model):
 
 
 class VariantPublicationReview(models.Model):
-    """Tracks user-editable & variant-specific publication reviews.
+    """Tracks user-editable variant-specific publication reviews.
 
     Data attributes:
     variant:       Variant
@@ -200,24 +207,24 @@ class VariantPublicationReview(models.Model):
     summary:       review of publication's info regarding variant (TextField)
 
     """
-    variant = models.ForeignKey(Variant)
+    variantreview = models.ForeignKey(VariantReview)
     publication = models.ForeignKey(Publication)
     summary = models.TextField()
 
     class Meta:
         """Defines combination of variant and publication as unique."""
-        unique_together = (('variant', 'publication',))
+        unique_together = (('variantreview', 'publication',))
 
     def __unicode__(self):
         """Returns string containing variant, publication, and summary."""
-        return str(self.publication) + ',' + str(self.variant) + ':' + self.summary
+        return str(self.publication) + ',' + str(self.variantreview.variant) + ':' + self.summary
 
     @classmethod
-    def create(cls, variant=None, pmid=None):
+    def create(cls, variantreview=None, pmid=None):
         try:
             pub = Publication.pub_lookup(pmid)
         except Publication.DoesNotExist:
             pub = Publication.create(pmid=pmid)
             pub.save()
-        varpubreview = cls(variant=variant, publication=pub)
+        varpubreview = cls(variantreview=variantreview, publication=pub)
         return varpubreview

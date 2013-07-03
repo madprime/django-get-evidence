@@ -53,7 +53,8 @@ def add_pub(request, variant_pattern):
     """Add publication to variant."""
     try:
         variant = Variant.variant_lookup(variant_pattern)
-        varpubreviews = VariantPublicationReview.objects.filter(variant__id=variant.id)
+        varpubreviews = VariantPublicationReview.objects.filter(
+                            variantreview__id=variant.variantreview.id)
         if not request.method == 'POST':
             return render(request, 'variants/add_pub.html',
                           {'variant': variant,
@@ -62,8 +63,9 @@ def add_pub(request, variant_pattern):
                            'varpubreviews': varpubreviews,
                            })
         else:
-            varpubreview = VariantPublicationReview.create(variant = variant,
-                                                   pmid = request.POST['pmid'])
+            varpubreview = VariantPublicationReview.create(
+                               variantreview = variant.variantreview,
+                               pmid = request.POST['pmid'])
             try:
                 varpubreview.save()
             except IntegrityError:
@@ -114,7 +116,8 @@ def detail(request, variant_pattern):
     """
     try:
         variant = Variant.variant_lookup(variant_pattern)
-        varpubreviews = VariantPublicationReview.objects.filter(variant__id=variant.id)
+        varpubreviews = VariantPublicationReview.objects.filter(
+                            variantreview__id=variant.variantreview.id)
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,
