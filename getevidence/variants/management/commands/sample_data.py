@@ -1,6 +1,7 @@
 """Create sample variant data for development and testing."""
 
-from models import DbSNP, Gene, Variant, VariantReview
+from django.core.management.base import BaseCommand, CommandError
+from ...models import DbSNP, Gene, Variant, VariantReview
 
 def create_HBB_E7V():
     """Create sample data for HBB-E7V."""
@@ -56,12 +57,12 @@ def create_JAK2_V617F():
 
 def create_sample_data():
     """Creates test data in database."""
-
-    # Erases all old data.
-    Gene.objects.all().delete()
-    Variant.objects.all().delete()
-    DbSNP.objects.all().delete()
-
     create_HBB_E7V()
     create_JAK2_V617F()
 
+
+class Command(BaseCommand):
+    help = 'Adds sample data to database'
+
+    def handle(self, *args, **options):
+        create_sample_data()

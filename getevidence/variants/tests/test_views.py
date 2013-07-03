@@ -5,7 +5,7 @@ Tests views.py in variants app.
 import re
 from django.test import TestCase
 from django.test.client import Client
-from ..sample_data import create_sample_data
+from ..management.commands.sample_data import create_sample_data
 from ..models import Variant, VariantReview
 
 class VariantsViewsTest(TestCase):
