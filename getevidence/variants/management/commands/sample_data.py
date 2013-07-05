@@ -1,7 +1,7 @@
 """Create sample variant data for development and testing."""
 
-from django.core.management.base import BaseCommand, CommandError
-from ...models import DbSNP, Gene, Variant, VariantReview
+from django.core.management.base import BaseCommand
+from ...models import DbSNP, Variant, VariantPublicationReview, Publication
 
 def create_HBB_E7V():
     """Create sample data for HBB-E7V."""
@@ -19,20 +19,27 @@ def create_HBB_E7V():
     v01.gene.genereviews = True
     v01.gene.save()
     # Add data to VariantReview.
-    vr01 = VariantReview.objects.get(variant=v01)
-    vr01.review_summary = "Causes sickle cell anemia."
-    vr01.evidence_computational = 1
-    vr01.evidence_functional = 3
-    vr01.evidence_casecontrol = 5
-    vr01.evidence_familial = 5
-    vr01.clinical_severity = 4
-    vr01.clinical_treatability = 4
-    vr01.clinical_penetrance = 5
-    vr01.impact = 'pat'
-    vr01.inheritance = 'rec'
-    vr01.review_long = ("Most common cause of sickle-cell anemia, most " +
-                        "often found in individuals with African ancestry.")
-    vr01.save()
+    v01.variantreview.review_summary = "Causes sickle cell anemia."
+    v01.variantreview.evidence_computational = 1
+    v01.variantreview.evidence_functional = 3
+    v01.variantreview.evidence_casecontrol = 5
+    v01.variantreview.evidence_familial = 5
+    v01.variantreview.clinical_severity = 4
+    v01.variantreview.clinical_treatability = 4
+    v01.variantreview.clinical_penetrance = 5
+    v01.variantreview.impact = 'pat'
+    v01.variantreview.inheritance = 'rec'
+    v01.variantreview.review_long = ("Most common cause of sickle-cell " +
+                                     "anemia, most often found in individuals" +
+                                     " with African ancestry.")
+    v01.variantreview.save()
+    try:
+        p01 = Publication.objects.get(pmid = '10631276')
+        VariantPublicationReview.objects.get(variantreview = v01.variantreview,
+                                             publication = p01)
+    except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
+        VariantPublicationReview.create(variantreview = v01.variantreview,
+                                        pmid = '10631276')
 
 
 def create_JAK2_V617F():
@@ -48,11 +55,10 @@ def create_JAK2_V617F():
     if not s02 in v02.dbsnps.all():
         v02.dbsnps.add(s02)
     # Add data to VariantReview.
-    vr02 = VariantReview.objects.get(variant=v02)
-    vr02.review_long=("Acquired mutation in blood stem cells, " +
-                      "associated with increased risk of " +
-                      "myeloproliferative disorders.")
-    vr02.save()
+    v02.variantreview.review_long=("Acquired mutation in blood stem cells, " +
+                                   "associated with increased risk of " +
+                                   "myeloproliferative disorders.")
+    v02.variantreview.save()
 
 
 def create_sample_data():

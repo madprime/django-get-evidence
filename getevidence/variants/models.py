@@ -227,4 +227,5 @@ class VariantPublicationReview(models.Model):
             pub = Publication.create(pmid=pmid)
             pub.save()
         varpubreview = cls(variantreview=variantreview, publication=pub)
+        varpubreview.save()
         return varpubreview

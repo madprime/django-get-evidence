@@ -63,11 +63,10 @@ def add_pub(request, variant_pattern):
                            'varpubreviews': varpubreviews,
                            })
         else:
-            varpubreview = VariantPublicationReview.create(
-                               variantreview = variant.variantreview,
-                               pmid = request.POST['pmid'])
             try:
-                varpubreview.save()
+                varpubreview = VariantPublicationReview.create(
+                    variantreview = variant.variantreview,
+                    pmid = request.POST['pmid'])
             except IntegrityError:
                 return HttpResponse("Sorry, this publication is already added.")
             return HttpResponseRedirect(reverse('variants:detail',
