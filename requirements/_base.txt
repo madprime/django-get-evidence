@@ -1,4 +1,6 @@
 bpython==0.12
+django==1.5
+psycopg2>=2.5
+requests>=1.2
 South==0.7.6
 django-reversion==1.6
-requests>=1.2
