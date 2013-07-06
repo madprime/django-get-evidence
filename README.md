@@ -17,19 +17,19 @@ to describe alternate instructions. Thanks!
 * Navigate to the directory you want to have the code in, and clone the 
 repository with: `git clone git://github.com/madprime/django-get-evidence`.
 
-### Install postgres and pip ###
+### Install postgres, pip, virtualenv, and virtualenvwrapper ###
 
-1. **(Root user action)** Install Postgres with: `sudo apt-get install postgres` 
+1. **(Root user action)** Install Postgres with: `sudo apt-get install postgresql` 
 2. **(Root user action)** Install pip: `sudo apt-get install python-pip` 
+3. **(Root user action)** Use pip to install virtualenv and virtualenvwrapper: `sudo pip install virtualenv virtualenvwrapper`.
 
 ### Set up virtualenv and virtualenvwrapper ###
 
-1. Use pip to install virtualenv and virtualenvwrapper: `pip install virtualenv virtualenvwrapper`.
-2. Make a directory to store your virtual environments: `mkdir ~/.virtualenvs`
-3. To make virtualenv and virtualenvwrapper commands work in future terminals, add the 
+1. Make a directory to store your virtual environments: `mkdir ~/.virtualenvs`
+2. To make virtualenv and virtualenvwrapper commands work in future terminals, add the 
 following to your bashrc (or zshrc, as appropriate): 
 `export WORKON_HOME=$HOME/.virtualenvs` and
-`source source /usr/local/bin/virtualenvwrapper.sh`.
+`source /usr/local/bin/virtualenvwrapper.sh`.
 
 ### Make a virtual environment and install required Python packages ###
 
@@ -59,4 +59,4 @@ create a superuser account for admin; set it to whatever you wish.
 
 ### Run server ###
 
-* You can now run a local version with `python manage.py runserver --settings=getevidence.settings.dev`
+* You can now run a local version with `python manage.py runserver`
