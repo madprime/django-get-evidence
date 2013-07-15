@@ -17,7 +17,8 @@ def process_hgnc_data(hgnc_data):
     for row in [tsv_row(x) for x in hgnc_data]:
         hgnc_ids[row[0]] = row[1]
         gene_symbols[row[1]] = { 'hgnc_id': row[0],
-                                 'hgnc_symbol': row[1] }
+                                 'hgnc_symbol': row[1],
+                                 'hgnc_name': row[2] }
 
         if row[4]:
             prev_symbols = row[4].split(', ')
@@ -197,9 +198,9 @@ def main(outputfilename):
         process_acmg_recommendations(acmg_recommendations_data)
 
     data_out = open(outputfilename, 'w')
-    csv_out = csv.writer(data_out)
-    header = ['hgnc_symbol', 'hgnc_id', 'ucsc_knowngene', 'ncbi_gene_id', 'mim_id',
-              'clinical_testing', 'acmg_recommended']
+    csv_out = csv.writer(data_out, lineterminator='\n')
+    header = ['hgnc_symbol', 'hgnc_id', 'hgnc_name', 'ucsc_knowngene',
+              'ncbi_gene_id', 'mim_id', 'clinical_testing', 'acmg_recommended']
     csv_out.writerow(header)
 
     gene_symbol_list = gene_symbols.keys()
@@ -209,14 +210,15 @@ def main(outputfilename):
         data_out = [None for x in range(len(header))]
         data_out[0] = data['hgnc_symbol']
         data_out[1] = data['hgnc_id'][5:]
-        data_out[2] = data['ucsc_knowngene_id']
-        data_out[3] = data['ncbi_gene_id']
+        data_out[2] = data['hgnc_name']
+        data_out[3] = data['ucsc_knowngene_id']
+        data_out[4] = data['ncbi_gene_id']
         if 'mim_id' in data:
-            data_out[4] = data['mim_id'][4:]
+            data_out[5] = data['mim_id'][4:]
         if 'clinical_testing' in data and data['clinical_testing']:
-            data_out[5] = 'Y'
-        if 'acmg_recommended' in data and data['acmg_recommended']:
             data_out[6] = 'Y'
+        if 'acmg_recommended' in data and data['acmg_recommended']:
+            data_out[7] = 'Y'
         csv_out.writerow(data_out)
 
 

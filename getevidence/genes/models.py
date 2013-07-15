@@ -24,6 +24,7 @@ class Gene(models.Model):
 
     All of the following are required and required unique for all Genes.
     hgnc_symbol:    HGNC gene symbol (CharField)
+    hgnc_name:      HGNC full name (CharField)
     hgnc_id:        HGNC gene ID (CharField)
     ucsc_knowngene: UCSC KnownGene transcript ID (CharField)
     ncbi_gene_id:   NCBI gene ID (CharField)
@@ -43,6 +44,8 @@ class Gene(models.Model):
     hgnc_symbol = models.CharField(unique=True,
                                    verbose_name='HGNC gene symbol',
                                    max_length=15,)
+    hgnc_name = models.TextField(verbose_name='HGNC gene name',
+                                 )
     hgnc_id = models.CharField(unique=True,
                                verbose_name='HGNC ID',
                                max_length=5,)

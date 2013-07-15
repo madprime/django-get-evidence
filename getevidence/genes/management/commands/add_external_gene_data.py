@@ -17,13 +17,14 @@ def add_external_gene_data(gene_data_filepath):
         for row in gene_data:
             gene, unused = Gene.objects.get_or_create(hgnc_symbol=row[0],
                                                       hgnc_id=row[1],
-                                                      ucsc_knowngene=row[2],
-                                                      ncbi_gene_id=row[3])
-            if row[4]:
-                gene.mim_id = row[4]
-            if row[5] and row[5] == 'Y':
-                gene.clinical_testing = True
+                                                      hgnc_name=row[2],
+                                                      ucsc_knowngene=row[3],
+                                                      ncbi_gene_id=row[4])
+            if row[5]:
+                gene.mim_id = row[5]
             if row[6] and row[6] == 'Y':
+                gene.clinical_testing = True
+            if row[7] and row[7] == 'Y':
                 gene.acmg_recommended = True
             gene.save()
     except IOError:

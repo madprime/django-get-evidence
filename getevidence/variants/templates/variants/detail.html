@@ -1,13 +1,13 @@
 {% extends "variants/index.html" %}
 
+{% block page_title %}{{ variant.name }}{% endblock page_title %}
+
 {% block content %}
 <div class="row">
   <div class="span10 lead">
-    {% block page_title %}{{ variant.name }}{% endblock page_title %}
     {{ variant_review.review_summary }}
   </div>
   <div class="span2 muted">
-    <h4>Gene: {{ variant.gene.hgnc_symbol }}</h4>
     HGNC ID: <A HREF="http://http://www.genenames.org/data/hgnc_data.php?hgnc_id={{ variant.gene.hgnc_id }}">{{ variant.gene.hgnc_id }} <i class="icon-external-link-sign"></i></A>
     <br />
     NCBI Gene ID: <A HREF="http://www.ncbi.nlm.nih.gov/gene/{{ variant.gene.ncbi_gene_id }}">{{ variant.gene.ncbi_gene_id }} <i class="icon-external-link-sign"></i></A>
@@ -17,11 +17,15 @@
     {% endif %}
     {% if variant.gene.clinical_testing %}
     <br />
-    <A HREF=http://www.ncbi.nlm.nih.gov/gtr/genes/{{ variant.gene.ncbi_gene_id }}/>Genetic Testing Registry <i class="icon-external-link-sign"></i></A>
+    <A HREF="http://www.ncbi.nlm.nih.gov/gtr/genes/{{ variant.gene.ncbi_gene_id }}/">Genetic Testing Reg. <i class="icon-external-link-sign"></i></A>
     {% endif %}
+    {% if variant.gene.acmg_recommended %}
+    <br />
+    <b> ACMG recommended </b>
+    {% endif %}
+    <br />
   </div>
 </div>
-
 
 <div class="row">
   <div class="span6">

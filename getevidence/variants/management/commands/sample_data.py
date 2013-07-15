@@ -6,14 +6,7 @@ from ...models import Gene, Publication
 
 def create_HBB_E7V():
     """Create sample data for HBB-E7V."""
-    # Create Gene for HBB.
-    g01, created = Gene.objects.get_or_create(hgnc_symbol='HBB',
-                                              hgnc_id='4827',
-                                              ucsc_knowngene='uc001mae.1',
-                                              ncbi_gene_id='3043')
-    g01.mim_id = '141900'
-    g01.clinical_testing = True
-    # Create Variant. (Creates VariantReview and Gene if necessary.)
+    # Create Variant and VariantReview. Genes should be already loaded.
     try:
         v01 = Variant.variant_lookup('HBB-E7V')
     except Variant.DoesNotExist:
@@ -48,14 +41,7 @@ def create_HBB_E7V():
 
 def create_JAK2_V617F():
     """Create sample data for JAK2-V617F."""
-    # Create Gene for JAK2.
-    g02, created = Gene.objects.get_or_create(hgnc_symbol='JAK2',
-                                              hgnc_id='6192',
-                                              ucsc_knowngene='uc003ziw.3',
-                                              ncbi_gene_id='3717')
-    g02.mim_id = '147796'
-    g02.clinical_testing = True
-    # Create Variant. (Creates VariantReview and Gene if necessary.)
+    # Create Variant and VariantReview. Genes should be already loaded.
     try:
         v02 = Variant.variant_lookup('JAK2-V617F')
     except Variant.DoesNotExist:
@@ -72,21 +58,10 @@ def create_JAK2_V617F():
     v02.variantreview.save()
 
 
-def create_HFE():
-    """Create sample data for gene HFE."""
-    g03, created = Gene.objects.get_or_create(hgnc_symbol='HFE',
-                                              hgnc_id='4886',
-                                              ucsc_knowngene='uc003nfx.1',
-                                              ncbi_gene_id='3007')
-    g03.mim_id = '613609'
-    g03.clinical_testing = True
-
-
 def create_sample_data():
     """Creates test data in database."""
     create_HBB_E7V()
     create_JAK2_V617F()
-    create_HFE()
 
 
 class Command(BaseCommand):
