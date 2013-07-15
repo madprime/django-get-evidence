@@ -4,22 +4,19 @@ Tests models.py in variants app.
 
 from django.test import TestCase
 from ..models import DbSNP, Gene, Variant, VariantReview
-
+from ..management.commands.sample_data import create_HBB_E7V
 
 class VariantsModelsTest(TestCase):
     """Tests the functions and models in models.py."""
 
     def setUp(self):
-        """Adds or creates test data in database.
-
-        gene: HBB
-        variant: HBB-E7V
-        """
-        try:
-            v = Variant.variant_lookup('HBB-E7V')
-        except Variant.DoesNotExist:
-            v = Variant.create(gene_name='HBB', aa_ref='E', aa_pos=7, aa_var='V')
-        s, unused = DbSNP.objects.get_or_create(rsid='rs334')
+        create_HBB_E7V()
+        Gene.objects.create(hgnc_symbol='JAK2',
+                            hgnc_id='6192',
+                            ucsc_knowngene='uc003ziw.3',
+                            ncbi_gene_id='3717',
+                            mim_id='147796',
+                            clinical_testing=True)
 
     def test_parse_variant_with_HBB_E7V(self):
         """Tests classmethod parse_variant with 'HBB-E7V'."""
@@ -36,7 +33,7 @@ class VariantsModelsTest(TestCase):
     def test_variant_lookup_with_HBB_E7V(self):
         """Tests classmethod variant_lookup with 'HBB-E7V'."""
         variant = Variant.variant_lookup('HBB-E7V')
-        self.assertEqual(variant.gene.hgnc_name, 'HBB')
+        self.assertEqual(variant.gene.hgnc_symbol, 'HBB')
         self.assertEqual(variant.aa_reference, 'E')
         self.assertEqual(variant.aa_position, 7)
         self.assertEqual(variant.aa_variant, 'V')
@@ -61,7 +58,7 @@ class VariantsModelsTest(TestCase):
     def test_Variant_dbSNP_add_and_remove(self):
         """Tests adding dbSNP (ManyToMany) to Variant."""
         s = DbSNP.objects.get(rsid='rs334')
-        v = Variant.objects.get(gene__hgnc_name='HBB',
+        v = Variant.objects.get(gene__hgnc_symbol='HBB',
                                 aa_reference='E',
                                 aa_position=7, aa_variant='V')
         v.dbsnps.add(s)

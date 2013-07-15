@@ -21,7 +21,7 @@ from .forms import VariantReviewForm
 
 def index(request):
     """Lists Variants."""
-    variant_list = Variant.objects.order_by('gene__hgnc_name')
+    variant_list = Variant.objects.order_by('gene__hgnc_symbol')
     return render(request, 'variants/index.html', {'variant_list': variant_list})
 
 

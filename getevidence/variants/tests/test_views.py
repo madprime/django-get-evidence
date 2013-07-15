@@ -41,7 +41,7 @@ class VariantsViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # Check that edit was successful.
-        v = Variant.objects.get(gene__hgnc_name='HBB', aa_reference='E',
+        v = Variant.objects.get(gene__hgnc_symbol='HBB', aa_reference='E',
                                 aa_position=7, aa_variant='V')
         self.assertEqual(VariantReview.objects.get(variant=v).review_long,
                          "Acts in recessive manner.")
@@ -98,7 +98,7 @@ class VariantsViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # Check that edit was successful.
-        v = Variant.objects.get(gene__hgnc_name='HFE', aa_reference='C',
+        v = Variant.objects.get(gene__hgnc_symbol='HFE', aa_reference='C',
                                 aa_position=282, aa_variant='Y')
         self.assertTrue(v)
 
@@ -124,7 +124,7 @@ class VariantsViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response_var = response.context['variant']
         response_varrev = response.context['variant_review']
-        self.assertEqual(response_var.gene.hgnc_name, 'HBB')
+        self.assertEqual(response_var.gene.hgnc_symbol, 'HBB')
         self.assertEqual(response_var.aa_reference, 'E')
         self.assertEqual(response_var.aa_position, 7)
         self.assertEqual(response_var.aa_variant, 'V')

@@ -65,7 +65,7 @@ class Variant(models.Model):
 
     @classmethod
     def create(cls, gene_name=None, aa_ref=None, aa_pos=None, aa_var=None):
-        gene, unused = Gene.objects.get_or_create(hgnc_name=gene_name)
+        gene = Gene.objects.get(hgnc_symbol=gene_name)
         variant = cls(gene = gene,
                       aa_reference = aa_ref,
                       aa_position = aa_pos,
@@ -104,7 +104,7 @@ class Variant(models.Model):
         """Find and return Variant in database matching identifying string."""
         var_parse = cls.parse_variant(variant_string)
         var_match = cls.objects.get(
-            gene__hgnc_name__exact=var_parse['gene_name'],
+            gene__hgnc_symbol__exact=var_parse['gene_name'],
             aa_reference__exact=var_parse['aa_ref'],
             aa_position__exact=var_parse['aa_pos'],
             aa_variant__exact=var_parse['aa_var'],
@@ -118,7 +118,7 @@ class Variant(models.Model):
 
     def __unicode__(self):
         """Returns string with gene name and amino acid change."""
-        return (self.gene.hgnc_name + '-' + self.aa_reference + 
+        return (self.gene.hgnc_symbol + '-' + self.aa_reference +
                 str(self.aa_position) + self.aa_variant)
 
     name = property(__unicode__)
