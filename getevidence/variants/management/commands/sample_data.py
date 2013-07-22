@@ -30,6 +30,7 @@ def create_HBB_E7V():
                                      "anemia, most often found in individuals" +
                                      " with African ancestry.")
     v01.variantreview.save()
+    # Add publications.
     try:
         p01 = Publication.objects.get(pmid = '10631276')
         VariantPublicationReview.objects.get(variantreview = v01.variantreview,
@@ -58,10 +59,53 @@ def create_JAK2_V617F():
     v02.variantreview.save()
 
 
+def create_SCN5A_G615E():
+    """Create sample data for SCN5A-G615E."""
+    # Create Variant and VariantReview. Genes should be already loaded.
+    try:
+        v03 = Variant.variant_lookup('SCN5A-G615E')
+    except Variant.DoesNotExist:
+        v03 = Variant.create(gene_name='SCN5A', aa_ref='G',
+                             aa_pos=615, aa_var='E')
+    # Create dbSNP and add to Variant.
+    s03, unused = DbSNP.objects.get_or_create(rsid='rs12720452')
+    if not s03 in v03.dbsnps.all():
+        v03.dbsnps.add(s03)
+    # Add data to VariantReview.
+    v03.variantreview.review_summary=(
+        "Rare, reported to be associated with long-QT syndrome (can cause " +
+        "syncopal spells, sudden death as a teenager / young adult), but " +
+        "observations are scattered may have some publication bias.")
+    v03.variantreview.evidence_computational = 3
+    v03.variantreview.evidence_casecontrol = 1
+    v03.variantreview.clinical_severity = 4
+    v03.variantreview.clinical_treatability = 3
+    v03.variantreview.clinical_penetrance = 4
+    v03.variantreview.impact = 'pat'
+    v03.variantreview.inheritance = 'dom'
+    v03.variantreview.save()
+    # Add publications.
+    try:
+        p03a = Publication.objects.get(pmid = '11997281')
+        VariantPublicationReview.objects.get(variantreview = v03.variantreview,
+                                             publication = p03a)
+    except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
+        VariantPublicationReview.create(variantreview = v03.variantreview,
+                                        pmid = '11997281')
+    try:
+        p03b = Publication.objects.get(pmid = '15840476')
+        VariantPublicationReview.objects.get(variantreview = v03.variantreview,
+                                             publication = p03b)
+    except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
+        VariantPublicationReview.create(variantreview = v03.variantreview,
+                                        pmid = '15840476')
+
+
 def create_sample_data():
     """Creates test data in database."""
     create_HBB_E7V()
     create_JAK2_V617F()
+    create_SCN5A_G615E()
 
 
 class Command(BaseCommand):
