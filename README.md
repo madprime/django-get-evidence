@@ -55,7 +55,8 @@ and "n" to creating new roles.
 `sudo -i -u postgres createdb -O getevidence getevidence`
 3. Navigate to the django-get-evidence/getevidence/. Run `python manage.py syncdb`. You should probably 
 create a superuser account for admin; set it to whatever you wish.
-4. **(Optional)** Add sample data by running `python manage.py sample_data`.
+4. Add gene data by running: `python manage.py add_external_gene_data ../external_data/getevidence_external_gene_data.csv`
+5. **(Optional)** Add sample data by running `python manage.py sample_data`.
 
 ### Run server ###
 
