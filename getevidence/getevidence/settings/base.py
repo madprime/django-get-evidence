@@ -128,6 +128,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    'reversion.middleware.RevisionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -155,6 +157,7 @@ DJANGO_APPS = (
     # 'django.contrib.admindocs',
 )
 THIRD_PARTY_APPS = (
+    'reversion',
     # Database migration helpers:
     # 'south',
 )

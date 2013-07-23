@@ -12,6 +12,7 @@ detail:      view to display Variant
 
 """
 
+import reversion
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from django.shortcuts import render

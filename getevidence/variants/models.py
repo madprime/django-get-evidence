@@ -10,6 +10,7 @@ VariantReview: Tracks user-editable data for a variant
 """
 
 import re
+import reversion
 from django.db import models
 from genes.models import Gene
 from publications.models import Publication
@@ -229,3 +230,9 @@ class VariantPublicationReview(models.Model):
         varpubreview = cls(variantreview=variantreview, publication=pub)
         varpubreview.save()
         return varpubreview
+
+
+# Register models with reversion.
+reversion.register(VariantReview)
+reversion.register(VariantPublicationReview)
+reversion.register(Variant)

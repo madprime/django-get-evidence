@@ -1,6 +1,6 @@
 import requests
 from django.db import models
-
+import reversion
 
 class Publication(models.Model):
     """Records publication information.
@@ -35,3 +35,6 @@ class Publication(models.Model):
                            self.pmid + '?format=text')
         if req.status_code == 200:
             self.pubmed_text = req.text
+
+# Register model with reversion.
+reversion.register(Publication)
