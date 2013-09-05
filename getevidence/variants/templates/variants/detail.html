@@ -1,6 +1,15 @@
 {% extends "variants/index.html" %}
 
-{% block page_title %}{{ variant.name }}{% endblock page_title %}
+{% block page_title %}
+<div class="row-fluid">
+  <div class="span10">
+    {{ variant.name }}
+  </div>
+  <div class="span2">
+    <a class="btn btn-primary btn-large pull-right" href="{% url 'variants:edit' variant.name %}">Edit variant</a>
+  </div>
+</div>
+{% endblock page_title %}
 
 {% block content %}
 <div class="row">
@@ -60,10 +69,6 @@
 dbSNP: {{ dbsnps|join:", " }}
 </p>
 
-<p>
-<a href="{% url 'variants:edit' variant.name %}">Edit variant</a>
-</p>
-
 <h4> Publications </h4>
 
 <ul>
@@ -76,7 +81,7 @@ dbSNP: {{ dbsnps|join:", " }}
 
 {% block add_pub %}
 <p>
-<a href="{% url 'variants:add_pub' variant.name %}">Add publication</a>
+<a class="btn" href="{% url 'variants:add_pub' variant.name %}">Add publication</a>
 </p>
 {% endblock add_pub %}
 
