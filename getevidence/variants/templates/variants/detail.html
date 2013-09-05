@@ -42,19 +42,19 @@
     <table class="table table-condensed">
       <tr>
 	<td><h5 style="margin:0">Computational</h5></td>
-	<td>{{ variant_review.evidence_computational }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.evidence_computational %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Functional</h5></td>
-	<td>{{ variant_review.evidence_functional }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.evidence_functional %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Case/control</h5></td>
-	<td>{{ variant_review.evidence_casecontrol }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.evidence_casecontrol %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Familial</h5></td>
-	<td>{{ variant_review.evidence_functional }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.evidence_familial %}</td>
       </tr>
     </table>
   </div>
@@ -63,15 +63,15 @@
     <table class="table table-condensed">
       <tr>
 	<td><h5 style="margin:0">Severity</h5></td>
-	<td>{{ variant_review.clinical_severity }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.clinical_severity %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Treatability</h5></td>
-	<td>{{ variant_review.clinical_treatability }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.clinical_treatability %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Penetrance</h5></td>
-	<td>{{ variant_review.clinical_penetrance }}</td>
+	<td>{% include "variants/score_display.html" with score=variant_review.clinical_penetrance %}</td>
       </tr>
     </table>
   </div>

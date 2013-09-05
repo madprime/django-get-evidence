@@ -1,0 +1,59 @@
+{% if score == None %}
+  <i class="icon-star-empty getev-lightgray"></i>
+  <i class="icon-star-empty getev-lightgray"></i>
+  <i class="icon-star-empty getev-lightgray"></i>
+  <i class="icon-star-empty getev-lightgray"></i>
+  <i class="icon-star-empty getev-lightgray"></i>
+  <i class="icon-star-empty getev-lightgray"></i>
+{% else %}
+  {% if score == -1 %}
+    <i class="icon-star getev-red"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 0 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 1 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 2 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 3 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 4 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star-empty getev-gray"></i>
+  {% elif score == 5 %}
+    <i class="icon-star-empty getev-gray"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+    <i class="icon-star getev-blue"></i>
+  {% endif %}
+{% endif %}

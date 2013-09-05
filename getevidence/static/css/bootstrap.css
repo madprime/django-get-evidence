@@ -675,6 +675,26 @@ cite {
   font-style: normal;
 }
 
+.getev-blue {
+  color: #0072bc;
+}
+
+.getev-purple {
+  color: #5a1f9d;
+}
+
+.getev-red {
+  color: #db1c3a;
+}
+
+.getev-lightgray {
+  color: #eeeeee;
+}
+
+.getev-gray {
+  color: #cccccc;
+}
+
 .muted {
   color: #999999;
 }
