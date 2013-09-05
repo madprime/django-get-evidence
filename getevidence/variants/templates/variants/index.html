@@ -9,14 +9,15 @@
 
 {% block content %}
 {% if variant_list %}
-    <ul>
-    {% for variant in variant_list %}
-        <li><a href="{% url 'variants:detail' variant.name %}">
-	    {{ variant.name }}</a></li>
-    {% endfor %}
-    </ul>
+<div class="row">
+<table class="table span6 table-hover">
+  {% for variant in variant_list %}
+  <tr><td><a href="{% url 'variants:detail' variant.name %}">{{ variant.name }}</a></td></tr>
+{% endfor %}
+</table>
+</div>
 {% else %}
-    <p>No variants are available.</p>
+<p>No variants are available.</p>
 {% endif %}
 
 <p><a class="btn btn-primary" href="{% url 'variants:new' %}">Create new variant</a></p>
