@@ -108,9 +108,12 @@ dbSNP: {{ dbsnps|join:", " }}
 
 <ul>
 {% for varpubreview in varpubreviews %}
-<li>{{ varpubreview.publication.pmid }}<br />
-{{ varpubreview.publication.pubmed_text }}<br />
-{{ varpubreview.summary }}</li>
+<li>
+  <p>{{ varpubreview.publication.author_list }} <strong>"{{ varpubreview.publication.title }}"</strong> {{ varpubreview.publication.journal }}. {{ varpubreview.publication.pub_date }}; {{ varpubreview.publication.journal_location }}</p>
+  <p>PMID: <A HREF=http://www.ncbi.nlm.nih.gov/pubmed/{{ varpubreview.publication.pmid }}>{{ varpubreview.publication.pmid }} <i class="icon-external-link-sign"></i></A></p>
+  <p class="muted"><small><strong>Abstract: </strong>{{ varpubreview.publication.abstract }}</small></p>
+  <p>{{ varpubreview.summary }}</p>
+</li>
 {% endfor %}
 </ul>
 
