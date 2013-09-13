@@ -6,7 +6,7 @@
     {{ variant.name }}
   </div>
   <div class="span2">
-    <a class="btn btn-primary btn-large" href="{% url 'variants:edit' variant.name %}">Edit variant</a>
+    {% block variant_edit_button %}<a class="btn btn-primary btn-large" href="{% url 'variants:edit' variant.name %}">Edit variant</a>{% endblock variant_edit_button %}
   </div>
 </div>
 {% endblock page_title %}
@@ -93,7 +93,7 @@
 <hr />
 
 <h4>Long review</h4>
-<p>{{ variant_review.review_long }}</p>
+<p style="white-space:pre-wrap;">{{ variant_review.review_long }}</p>
 
 <hr />
 
@@ -109,9 +109,8 @@ dbSNP: {{ dbsnps|join:", " }}
 <ul>
 {% for varpubreview in varpubreviews %}
 <li>
-  <p>{{ varpubreview.publication.author_list }} <strong>"{{ varpubreview.publication.title }}"</strong> {{ varpubreview.publication.journal }}. {{ varpubreview.publication.pub_date }}; {{ varpubreview.publication.journal_location }}</p>
-  <p>PMID: <A HREF=http://www.ncbi.nlm.nih.gov/pubmed/{{ varpubreview.publication.pmid }}>{{ varpubreview.publication.pmid }} <i class="icon-external-link-sign"></i></A></p>
-  <p class="muted"><small><strong>Abstract: </strong>{{ varpubreview.publication.abstract }}</small></p>
+  <p>{{ varpubreview.publication.author_list }} <strong>"{{ varpubreview.publication.title }}"</strong> {{ varpubreview.publication.journal }}. {{ varpubreview.publication.pub_date }}; {{ varpubreview.publication.journal_location }}. PMID: <A HREF=http://www.ncbi.nlm.nih.gov/pubmed/{{ varpubreview.publication.pmid }}>{{ varpubreview.publication.pmid }} <i class="icon-external-link-sign"></i></A></p>
+  <div class="well"><small><strong>Abstract: </strong>{{ varpubreview.publication.abstract }}</small></div>
   <p>{{ varpubreview.summary }}</p>
 </li>
 {% endfor %}

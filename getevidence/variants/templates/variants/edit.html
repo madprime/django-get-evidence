@@ -1,5 +1,7 @@
 {% extends "variants/detail.html" %}
 
+{% block variant_edit_button %}{% endblock variant_edit_button %}
+
 {% block content %}
 <form class="form-vertical editor span12" action="{% url 'variants:edit' variant.name %}" method="post">
 {% csrf_token %}
