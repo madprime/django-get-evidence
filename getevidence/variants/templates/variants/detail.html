@@ -116,10 +116,32 @@ dbSNP: {{ dbsnps|join:", " }}
 {% endfor %}
 </ul>
 
-{% block add_pub %}
-<p>
-<a class="btn" href="{% url 'variants:add_pub' variant.name %}">Add publication</a>
-</p>
-{% endblock add_pub %}
+<div class="addpub_button">
+  <p>
+    <button class="btn">Add publication</button>
+  </p>
+</div>
+
+<div class="addpub_form">
+  <form class action="{% url 'variants:add_pub' variant.name %}" method="post">
+    {% csrf_token %}
+    Pubmed ID: <input type="text" name="pmid" />
+    <input type="submit" value="Submit" />
+  </form>
+</div>
 
 {% endblock content %}
+
+
+{% block extra_js %}
+<script>
+  $(function() {
+    console.log("loading script")
+    $(".addpub_form").hide();
+    $(".addpub_button").click(function() {
+      $(".addpub_button").hide();
+      $(".addpub_form").show();
+    });
+  });
+</script>
+{% endblock extra_js %}

@@ -17,6 +17,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 from .models import Variant, VariantReview, VariantPublicationReview
 from .forms import VariantReviewForm
 
@@ -54,25 +55,18 @@ def add_pub(request, variant_pattern):
     """Add publication to variant."""
     try:
         variant = Variant.variant_lookup(variant_pattern)
-        varpubreviews = VariantPublicationReview.objects.filter(
-                            variantreview__id=variant.variantreview.id)
-        if not request.method == 'POST':
-            return render(request, 'variants/add_pub.html',
-                          {'variant': variant,
-                           'variant_review': variant.variantreview,
-                           'dbsnps': variant.dbsnps.all(),
-                           'varpubreviews': varpubreviews,
-                           })
-        else:
+        if request.method == 'POST':
             try:
-                varpubreview = VariantPublicationReview.create(
+                VariantPublicationReview.create(
                     variantreview = variant.variantreview,
                     pmid = request.POST['pmid'])
+                messages.success(request, "PMID " +
+                                 request.POST['pmid'] + " added.")
             except IntegrityError:
-                return HttpResponse("Sorry, this publication is already added.")
-            return HttpResponseRedirect(reverse('variants:detail',
-                                                args=(variant_pattern,)))
-
+                messages.error(request, "Publication not added: PMID " +
+                               request.POST['pmid'] + " was already present.")
+        return HttpResponseRedirect(reverse('variants:detail',
+                                            args=(variant_pattern,)))
     except AssertionError:
         return HttpResponse("Add publication - Badly formatted variant? " +
                             variant_pattern)
@@ -117,7 +111,8 @@ def detail(request, variant_pattern):
     try:
         variant = Variant.variant_lookup(variant_pattern)
         varpubreviews = VariantPublicationReview.objects.filter(
-                            variantreview__id=variant.variantreview.id)
+                            variantreview__id=variant.variantreview.id
+                            ).order_by('-publication__pmid')
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,

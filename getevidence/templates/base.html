@@ -48,10 +48,23 @@
       </div>
     </div>
     <div class="container">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
       <h1>{% block page_title %}Welcome to GET-Evidence{% endblock page_title %}</h1>
       {% block content %}
         <p>This is the start of a rewrite of GET-Evidence.</p>
       {% endblock content %}
+
+      <footer>
+	{% block footer %}
+	<hr />
+	<p class="muted">Footer stuff here &bull; Link to github &bull; TOS &bull; etc.</p>
+	{% endblock footer %}
+      </footer>
     </div>
 
     <!-- Javascript placed at end of document so pages load faster. -->

@@ -1,9 +1,0 @@
-{% extends "variants/detail.html" %}
-
-{% block add_pub %}
-<form action="{% url 'variants:add_pub' variant.name %}" method="post">
-{% csrf_token %}
-Pubmed ID: <input type="text" name="pmid" />
-<input type="submit" value="Submit" />
-</form>
-{% endblock add_pub %}
