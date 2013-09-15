@@ -59,7 +59,7 @@ def add_pub(request, variant_pattern):
             try:
                 VariantPublicationReview.create(
                     variantreview = variant.variantreview,
-                    pmid = request.POST['pmid'])
+                    pmid = int(request.POST['pmid']))
                 messages.success(request, "PMID " +
                                  request.POST['pmid'] + " added.")
             except IntegrityError:
@@ -112,7 +112,7 @@ def detail(request, variant_pattern):
         variant = Variant.variant_lookup(variant_pattern)
         varpubreviews = VariantPublicationReview.objects.filter(
                             variantreview__id=variant.variantreview.id
-                            ).order_by('-publication__pmid')
+                            ).order_by('publication__pmid')
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,

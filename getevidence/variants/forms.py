@@ -1,4 +1,4 @@
-from .models import VariantReview
+from .models import VariantReview, VariantPublicationReview
 from django import forms
 
 class VariantReviewForm(forms.ModelForm):
@@ -23,3 +23,13 @@ class VariantReviewForm(forms.ModelForm):
             'review_long': forms.Textarea(attrs={'class': 'span10',
                                                  'rows': 8})
             }
+
+"""
+class VariantPublicationReviewForm(forms.ModelForm):
+    class Meta:
+        model = VariantPublicationReview
+
+    pmid = forms.IntegerField()
+
+    def clean(self):
+"""

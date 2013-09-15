@@ -32,12 +32,12 @@ def create_HBB_E7V():
     v01.variantreview.save()
     # Add publications.
     try:
-        p01 = Publication.objects.get(pmid = '10631276')
+        p01 = Publication.objects.get(pmid = 10631276)
         VariantPublicationReview.objects.get(variantreview = v01.variantreview,
                                              publication = p01)
     except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
         VariantPublicationReview.create(variantreview = v01.variantreview,
-                                        pmid = '10631276')
+                                        pmid = 10631276)
 
 
 def create_JAK2_V617F():
@@ -86,19 +86,19 @@ def create_SCN5A_G615E():
     v03.variantreview.save()
     # Add publications.
     try:
-        p03a = Publication.objects.get(pmid = '11997281')
+        p03a = Publication.objects.get(pmid = 11997281)
         VariantPublicationReview.objects.get(variantreview = v03.variantreview,
                                              publication = p03a)
     except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
         VariantPublicationReview.create(variantreview = v03.variantreview,
-                                        pmid = '11997281')
+                                        pmid = 11997281)
     try:
-        p03b = Publication.objects.get(pmid = '15840476')
+        p03b = Publication.objects.get(pmid = 15840476)
         VariantPublicationReview.objects.get(variantreview = v03.variantreview,
                                              publication = p03b)
     except Publication.DoesNotExist, VariantPublicationReview.DoesNotExist:
         VariantPublicationReview.create(variantreview = v03.variantreview,
-                                        pmid = '15840476')
+                                        pmid = 15840476)
 
 
 def create_sample_data():

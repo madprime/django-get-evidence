@@ -7,11 +7,16 @@ class Publication(models.Model):
     """Records publication information.
 
     Data attributes:
-    pmid: Pubmed ID (CharField, unique)
-    review: general summary of paper (TextField)
+    pmid: Pubmed ID (IntegerField, unique)
+    author_list: Comma-separated list of authors, truncated if >10 (TextField)
+    title: Article title (TextField)
+    pub_date: Publication date (CharField)
+    journal: Title of journal, with abbreviations (CharField)
+    journal_location: Volume, issue, and pagination (CharField)
+    abstract: Abstract text (TextField)
 
     """
-    pmid = models.CharField(max_length=16, unique=True)
+    pmid = models.IntegerField(unique=True)
     author_list = models.TextField(blank=True)
     title = models.TextField()
     pub_date = models.CharField(max_length=18)
@@ -21,7 +26,7 @@ class Publication(models.Model):
 
     def __unicode__(self):
         """Returns string with Pubmed ID."""
-        return 'pmid:' + self.pmid
+        return 'pmid:' + str(self.pmid)
 
     @classmethod
     def create(cls, pmid=None):
@@ -38,7 +43,7 @@ class Publication(models.Model):
     def get_pubmed_data(self):
         """Pull and parse abstract text from NCBI."""
         Entrez.email = "mad-getevidence@printf.net"
-        handle = Entrez.efetch(db="pubmed", id=self.pmid, retmode="xml")
+        handle = Entrez.efetch(db="pubmed", id=str(self.pmid), retmode="xml")
         record = Entrez.parse(handle).next()
 
         # Author data
