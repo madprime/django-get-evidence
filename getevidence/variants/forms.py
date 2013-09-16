@@ -24,12 +24,5 @@ class VariantReviewForm(forms.ModelForm):
                                                  'rows': 8})
             }
 
-"""
-class VariantPublicationReviewForm(forms.ModelForm):
-    class Meta:
-        model = VariantPublicationReview
-
-    pmid = forms.IntegerField()
-
-    def clean(self):
-"""
+class AddVarPubReviewForm(forms.Form):
+    pmid = forms.IntegerField(min_value=1)

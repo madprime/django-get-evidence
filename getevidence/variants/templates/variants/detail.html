@@ -125,8 +125,9 @@ dbSNP: {{ dbsnps|join:", " }}
 <div class="addpub_form">
   <form class action="{% url 'variants:add_pub' variant.name %}" method="post">
     {% csrf_token %}
-    Pubmed ID: <input type="text" name="pmid" />
-    <input type="submit" value="Submit" />
+    <label for="id_pmid">Pubmed ID:</label>
+    {{ addvarpubreview_form.pmid }}
+    <p><input type="submit" value="Submit" /></p>
   </form>
 </div>
 

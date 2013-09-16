@@ -19,7 +19,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from .models import Variant, VariantReview, VariantPublicationReview
-from .forms import VariantReviewForm
+from .forms import VariantReviewForm, AddVarPubReviewForm
 
 def index(request):
     """Lists Variants."""
@@ -56,15 +56,24 @@ def add_pub(request, variant_pattern):
     try:
         variant = Variant.variant_lookup(variant_pattern)
         if request.method == 'POST':
-            try:
-                VariantPublicationReview.create(
-                    variantreview = variant.variantreview,
-                    pmid = int(request.POST['pmid']))
-                messages.success(request, "PMID " +
-                                 request.POST['pmid'] + " added.")
-            except IntegrityError:
-                messages.error(request, "Publication not added: PMID " +
-                               request.POST['pmid'] + " was already present.")
+            form = AddVarPubReviewForm(request.POST)
+            if form.is_valid():
+                try:
+                    VariantPublicationReview.create(
+                        variantreview = variant.variantreview,
+                        pmid = form.cleaned_data['pmid'])
+                    messages.success(request, "<strong>Success:</strong> PMID " +
+                                     str(form.cleaned_data['pmid']) + " added.",
+                                     extra_tags='htmlsafe')
+                except IntegrityError:
+                    messages.error(request, "Publication not added: PMID " +
+                                   form.cleaned_data['pmid'] + " was already present.")
+            else:
+                messages.error(request,
+                               '<p><strong>Error: the PMID you entered ("' +
+                               request.POST['pmid'] + '") is not valid.</strong>' +
+                               '</p><p>Form validation errors listed below.</p>' +
+                               str(form.errors), extra_tags='htmlsafe')
         return HttpResponseRedirect(reverse('variants:detail',
                                             args=(variant_pattern,)))
     except AssertionError:
@@ -113,11 +122,13 @@ def detail(request, variant_pattern):
         varpubreviews = VariantPublicationReview.objects.filter(
                             variantreview__id=variant.variantreview.id
                             ).order_by('publication__pmid')
+        addvarpubreview_form = AddVarPubReviewForm()
         return render(request, 'variants/detail.html',
                       {'variant': variant,
                        'variant_review': variant.variantreview,
                        'dbsnps': variant.dbsnps.all(),
                        'varpubreviews': varpubreviews,
+                       'addvarpubreview_form': addvarpubreview_form,
                        })
     except AssertionError:
         return HttpResponse("Badly formatted variant? " + variant_pattern)

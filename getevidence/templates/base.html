@@ -1,3 +1,5 @@
+{% load variants_extras %}
+
 <!DOCTYPE html> 
 <html lang="en">
   <head>
@@ -50,7 +52,11 @@
     <div class="container">
       {% if messages %}
       {% for message in messages %}
-      <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+      <div class="alert{% if message.tags %}
+		  {% for tag in message.tags|split_on_space %} alert-{{ tag }}{% endfor %}
+		  {% endif %}">
+	{% if 'htmlsafe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+      </div>
       {% endfor %}
       {% endif %}
 

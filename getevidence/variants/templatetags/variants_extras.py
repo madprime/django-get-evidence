@@ -28,3 +28,7 @@ def multiply(value, arg):
     Filter - returns the value: value * arg
     """
     return int(value) * int(arg)
+
+@register.filter
+def split_on_space(string):
+    return string.split(' ')
