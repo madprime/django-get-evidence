@@ -1,0 +1,5 @@
+hgnc_symbol,hgnc_id,hgnc_name,ucsc_knowngene,ncbi_gene_id,mim_id,clinical_testing,acmg_recommended
+HBB,4827,"hemoglobin, beta",uc001mae.1,3043,141900,Y,
+HFE,4886,hemochromatosis,uc003nfx.1,3077,613609,Y,
+JAK2,6192,Janus kinase 2,uc003ziw.3,3717,147796,Y,
+SCN5A,10593,"sodium channel, voltage-gated, type V, alpha subunit",uc021wvl.1,6331,600163,Y,Y

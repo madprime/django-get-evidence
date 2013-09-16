@@ -1,6 +1,7 @@
 """Import external gene data."""
 
 import csv
+import sys
 from django.core.management.base import BaseCommand
 from ...models import Gene
 
@@ -39,4 +40,3 @@ class Command(BaseCommand):
             add_external_gene_data(args[0])
         except IndexError:
             print error_need_file
-

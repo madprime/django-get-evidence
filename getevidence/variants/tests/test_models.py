@@ -2,21 +2,18 @@
 Tests models.py in variants app.
 """
 
+from django.conf import settings
 from django.test import TestCase
 from ..models import DbSNP, Gene, Variant, VariantReview
+from ..management.commands.add_external_gene_data import add_external_gene_data
 from ..management.commands.sample_data import create_HBB_E7V
 
 class VariantsModelsTest(TestCase):
     """Tests the functions and models in models.py."""
 
     def setUp(self):
+        add_external_gene_data(settings.SITE_ROOT + '/../external_data/getevidence_external_gene_data_mini.csv')
         create_HBB_E7V()
-        Gene.objects.create(hgnc_symbol='JAK2',
-                            hgnc_id='6192',
-                            ucsc_knowngene='uc003ziw.3',
-                            ncbi_gene_id='3717',
-                            mim_id='147796',
-                            clinical_testing=True)
 
     def test_parse_variant_with_HBB_E7V(self):
         """Tests classmethod parse_variant with 'HBB-E7V'."""

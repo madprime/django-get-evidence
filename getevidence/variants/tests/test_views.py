@@ -3,10 +3,13 @@ Tests views.py in variants app.
 """
 
 import re
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import Client
+from ..management.commands.add_external_gene_data import add_external_gene_data
 from ..management.commands.sample_data import create_sample_data
 from ..models import Variant, VariantReview
+
 
 class VariantsViewsTest(TestCase):
     """Tests the functions and models in views.py."""
@@ -14,13 +17,14 @@ class VariantsViewsTest(TestCase):
     def setUp(self):
         """Set up a client and sample data using ..sample_data"""
         self.cl = Client()
+        add_external_gene_data(settings.SITE_ROOT + '/../external_data/getevidence_external_gene_data_mini.csv')
         create_sample_data()
 
     def test_index(self):
         """Test variants index."""
         response = self.cl.get('/variant/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['variant_list']), 2)
+        self.assertEqual(len(response.context['variant_list']), 3)
 
     def test_edit(self):
         """Test a sample edit submission."""
@@ -58,21 +62,12 @@ class VariantsViewsTest(TestCase):
 
     def test_add_pub(self):
         """Test add publication page."""
-        # Test loading page.
-        response = self.cl.get('/variant/HBB-E7V/add_pub')
-        self.assertEqual(response.status_code, 200)
-
         # Test submitting new publication.
         response = self.cl.post('/variant/HBB-E7V/add_pub',
                                 {'pmid': '2296310'})
 
         # After creating should perform a redirect to original variant page.
         self.assertEqual(response.status_code, 302)
-
-        # Test adding a publication already present.
-        response = self.cl.post('/variant/HBB-E7V/add_pub',
-                                {'pmid': '2296310'})
-        self.assertTrue(re.search("already added", response.content))
 
         # Test poorly formatted variant.
         response = self.cl.post('/variant/E7V-HBB/add_pub')

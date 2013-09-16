@@ -67,7 +67,7 @@ def add_pub(request, variant_pattern):
                                      extra_tags='htmlsafe')
                 except IntegrityError:
                     messages.error(request, "Publication not added: PMID " +
-                                   form.cleaned_data['pmid'] + " was already present.")
+                                   str(form.cleaned_data['pmid']) + " was already present.")
             else:
                 messages.error(request,
                                '<p><strong>Error: the PMID you entered ("' +
