@@ -19,7 +19,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from .models import Variant, VariantReview, VariantPublicationReview
-from .forms import VariantReviewForm, AddVarPubReviewForm
+from .forms import VariantReviewForm, AddVarPubReviewForm, NewVariantForm
 
 def index(request):
     """Lists Variants."""
@@ -86,28 +86,36 @@ def add_pub(request, variant_pattern):
 
 def new(request, error=None):
     """Create new Variant."""
-    if not request.method == 'POST':
-        return render(request, 'variants/new.html', {'error': error})
-    else:
-        variant_string = (request.POST['gene'] + '-' +
-                          request.POST['aa_reference'] +
-                          request.POST['aa_position'] +
-                          request.POST['aa_variant'])
-        try:
-            Variant.parse_variant(variant_string)
-        except (AssertionError, ValueError):
-            return HttpResponse("Sorry, variant data looks poorly formatted.")
-        try:
-            Variant.variant_lookup(variant_string)
-            return HttpResponse("Sorry, this variant already exists.")
-        except Variant.DoesNotExist:
-            # The Variant.create() classmethod also creates a VariantReview
-            # and, if necessary, a Gene.
-            Variant.create(gene_name = request.POST['gene'],
-                           aa_ref = request.POST['aa_reference'],
-                           aa_pos = request.POST['aa_position'],
-                           aa_var = request.POST['aa_variant'])
-            return HttpResponseRedirect(reverse('variants:index'))
+    if request.method == 'POST':
+        form = NewVariantForm(request.POST)
+        if form.is_valid():
+            variant_string = (form.cleaned_data['gene'] + '-' +
+                              form.cleaned_data['aa_reference'] +
+                              str(form.cleaned_data['aa_position']) +
+                              form.cleaned_data['aa_variant'])
+            try:
+                Variant.parse_variant(variant_string)
+            except (AssertionError, ValueError):
+                return HttpResponse("Sorry, variant string produced (" +
+                                    variant_string + ") looks poorly formatted.")
+            try:
+                Variant.create(gene_name = form.cleaned_data['gene'],
+                               aa_ref = form.cleaned_data['aa_reference'],
+                               aa_pos = form.cleaned_data['aa_position'],
+                               aa_var = form.cleaned_data['aa_variant'])
+                messages.success(request, "<strong>Success:</strong> Variant " +
+                                 variant_string + " added.",
+                                 extra_tags='htmlsafe')
+            except IntegrityError:
+                messages.error(request, '<p><strong>Error:</strong> Variant "' +
+                               variant_string + '" already exists.',
+                               extra_tags='htmlsafe')
+        else:
+            messages.error(request,
+                           "<p><strong>Error: the data you entered was not valid.</strong></>" +
+                           "<p>Form validation errors listed below.</p>" +
+                           str(form.errors), extra_tags='htmlsafe')
+    return HttpResponseRedirect(reverse('variants:index'))
 
 
 def detail(request, variant_pattern):

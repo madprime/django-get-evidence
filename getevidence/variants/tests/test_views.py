@@ -79,10 +79,6 @@ class VariantsViewsTest(TestCase):
 
     def test_new(self):
         """Test new variant entry page."""
-        # Test creating empty page.
-        response = self.cl.get('/variant/new')
-        self.assertEqual(response.status_code, 200)
-
         # Test creating new variant.
         response = self.cl.post('/variant/new',
                                 {'gene': 'HFE',
@@ -96,22 +92,6 @@ class VariantsViewsTest(TestCase):
         v = Variant.objects.get(gene__hgnc_symbol='HFE', aa_reference='C',
                                 aa_position=282, aa_variant='Y')
         self.assertTrue(v)
-
-        # Test poorly formatted variant.
-        response = self.cl.post('/variant/new',
-                                {'gene': 'HFE',
-                                 'aa_reference': 'C',
-                                 'aa_position': 'Y',
-                                 'aa_variant': '282'})
-        self.assertTrue(re.search("poorly formatted", response.content))
-
-        # Test already existing variant.
-        response = self.cl.post('/variant/new',
-                                {'gene': 'HBB',
-                                 'aa_reference': 'E',
-                                 'aa_position': '7',
-                                 'aa_variant': 'V'})
-        self.assertTrue(re.search("already exists", response.content))
 
     def test_detail(self):
         """Test variant detail page."""

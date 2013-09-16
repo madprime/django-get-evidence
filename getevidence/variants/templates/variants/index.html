@@ -20,6 +20,34 @@
 <p>No variants are available.</p>
 {% endif %}
 
-<p><a class="btn btn-primary" href="{% url 'variants:new' %}">Create new variant</a></p>
+<div class="addvar_button">
+  <p>
+    <button class="btn btn-primary">Create new variant</button>
+  </p>
+</div>
 
+<div class="addvar_form">
+  <form action="{% url 'variants:new' %}" method="post">
+    {% csrf_token %}
+    Gene: <input type="text" name="gene" /><br />
+    Reference amino acid (single letter): <input type="text" name="aa_reference" /><br />
+    Position (integer): <input type="text" name="aa_position" /><br />
+    Variant amino acid (single letter): <input type="text" name="aa_variant" /><br />
+    <input type="submit" value="Submit" />
+  </form>
+</div>
 {% endblock content %}
+
+
+{% block extra_js %}
+<script>
+  $(function() {
+    console.log("loading script")
+    $(".addvar_form").hide();
+    $(".addvar_button").click(function() {
+      $(".addvar_button").hide();
+      $(".addvar_form").show();
+    });
+  });
+</script>
+{% endblock extra_js %}
