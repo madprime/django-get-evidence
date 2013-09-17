@@ -131,9 +131,11 @@ def detail(request, variant_pattern):
                             variantreview__id=variant.variantreview.id
                             ).order_by('publication__pmid')
         addvarpubreview_form = AddVarPubReviewForm()
+        variantreview_history = reversion.get_for_object(variant.variantreview)
         return render(request, 'variants/detail.html',
                       {'variant': variant,
-                       'variant_review': variant.variantreview,
+                       'variantreview': variant.variantreview,
+                       'variantreview_history': variantreview_history,
                        'dbsnps': variant.dbsnps.all(),
                        'varpubreviews': varpubreviews,
                        'addvarpubreview_form': addvarpubreview_form,

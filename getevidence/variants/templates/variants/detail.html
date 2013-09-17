@@ -1,5 +1,7 @@
 {% extends "variants/index.html" %}
 
+{% load variants_extras %}
+
 {% block page_title %}
 <div class="row-fluid">
   <div class="span10">
@@ -14,7 +16,7 @@
 {% block content %}
 <div class="row">
   <div class="span10 lead">
-    {{ variant_review.review_summary }}
+    {{ variantreview.review_summary }}
   </div>
   <div class="span2 muted">
     HGNC ID: <A HREF="http://http://www.genenames.org/data/hgnc_data.php?hgnc_id={{ variant.gene.hgnc_id }}">{{ variant.gene.hgnc_id }} <i class="icon-external-link-sign"></i></A>
@@ -42,19 +44,19 @@
     <table class="table table-condensed">
       <tr>
 	<td><h5 style="margin:0">Computational</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.evidence_computational %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.evidence_computational %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Functional</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.evidence_functional %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.evidence_functional %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Case/control</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.evidence_casecontrol %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.evidence_casecontrol %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Familial</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.evidence_familial %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.evidence_familial %}</td>
       </tr>
     </table>
   </div>
@@ -63,15 +65,15 @@
     <table class="table table-condensed">
       <tr>
 	<td><h5 style="margin:0">Severity</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.clinical_severity %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.clinical_severity %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Treatability</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.clinical_treatability %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.clinical_treatability %}</td>
       </tr>
       <tr>
 	<td><h5 style="margin:0">Penetrance</h5></td>
-	<td>{% include "variants/score_display.html" with score=variant_review.clinical_penetrance %}</td>
+	<td>{% include "variants/score_display.html" with score=variantreview.clinical_penetrance %}</td>
       </tr>
     </table>
   </div>
@@ -82,25 +84,32 @@
 <div class="row">
   <div class="span6">
     <h4>Impact</h4>
-    <p>{{ variant_review.impact }}</p>
+    <p>{{ variantreview.impact }}</p>
   </div>
   <div class="span6">
     <h4>Inheritance</h4>
-    <p>{{ variant_review.inheritance }}</p>
+    <p>{{ variantreview.inheritance }}</p>
   </div>
 </div>
 
 <hr />
 
 <h4>Long review</h4>
-<p style="white-space:pre-wrap;">{{ variant_review.review_long }}</p>
+<p style="white-space:pre-wrap;">{{ variantreview.review_long }}</p>
 
 <hr />
 
-<h4> Additional data </h4>
+<h4>Additional data</h4>
 <p>
 dbSNP: {{ dbsnps|join:", " }}
 </p>
+
+<h4>Revisions</h4>
+<ul>
+{% for version in variantreview_history %}
+<li><strong>{{ version.revision.date_created }}:<strong> {{ version.field_dict|get_item:"review_summary" }}</li>
+{% endfor %}
+</ul>
 
 <hr />
 

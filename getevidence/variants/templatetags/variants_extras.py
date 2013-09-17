@@ -20,7 +20,7 @@ def get_range(value):
 
     Instead of 3 one may use the variable set in the views.
     """
-    return range( value )
+    return range( int(value) )
 
 @register.filter
 def multiply(value, arg):
@@ -32,3 +32,7 @@ def multiply(value, arg):
 @register.filter
 def split_on_space(string):
     return string.split(' ')
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
